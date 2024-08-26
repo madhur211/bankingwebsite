@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: #004085;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+        }
+        header img {
+            width: 150px;
+            vertical-align: middle;
+        }
+        header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .form-container, .result-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 600px;
+            max-width: 100%;
+            margin-top: 100px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group label span {
+            color: red;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group .error-message {
+            color: red;
+            font-size: 0.875em;
+            display: none;
+        }
+        .btn {
+            background-color: #004085;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #003366;
+        }
+        #jointFields {
+            display: none;
+        }
+        .result-container {
+            display: none;
+        }
+        footer {
+            background-color: #004085;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="logo.png" alt="Bank Logo">
+        
+    </header>
+
+    <div id="formContainer" class="form-container">
+        <h2>Register New Account</h2>
+        <form id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name: <span>*</span></label>
+                    <input type="text" id="name" name="name" required>
+                    <div id="nameError" class="error-message">Name is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth: <span>*</span></label>
+                    <input type="date" id="dob" name="dob" required>
+                    <div id="dobError" class="error-message">Date of Birth is required.</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gender">Gender: <span>*</span></label>
+                    <select id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div id="genderError" class="error-message">Gender is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number: <span>*</span></label>
+                    <input type="text" id="mobile" name="mobile" pattern="^\d{10}$" title="Enter a valid 10-digit mobile number" required>
+                    <div id="mobileError" class="error-message">Enter a valid 10-digit mobile number.</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email: <span>*</span></label>
+                    <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter a valid email address" required>
+                    <div id="emailError" class="error-message">Enter a valid email address.</div>
+                </div>
+                <div class="form-group">
+                    <label for="pan">PAN: <span>*</span></label>
+                    <input type="text" id="pan" name="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Enter a valid PAN (e.g., ABCDE1234F)" required>
+                    <div id="panError" class="error-message">Enter a valid PAN (e.g., ABCDE1234F).</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="aadhar">Aadhar: <span>*</span></label>
+                    <input type="text" id="aadhar" name="aadhar" pattern="\d{12}" title="Enter a valid 12-digit Aadhar number" required>
+                    <div id="aadharError" class="error-message">Enter a valid 12-digit Aadhar number.</div>
+                </div>
+                <div class="form-group">
+                    <label for="accountType">Account Type: <span>*</span></label>
+                    <select id="accountType" name="accountType" onchange="toggleJointFields()" required>
+                        <option value="single">Single</option>
+                        <option value="joint">Joint</option>
+                    </select>
+                    <div id="accountTypeError" class="error-message">Account Type is required.</div>
+                </div>
+            </div>
+            <div id="jointFields">
+                <h3>Joint Account Holder Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jointName">Joint Account Name:</label>
+                        <input type="text" id="jointName" name="jointName">
+                    </div>
+                    <div class="form-group">
+                        <label for="jointDob">Joint Date of Birth:</label>
+                        <input type="date" id="jointDob" name="jointDob">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jointGender">Joint Gender:</label>
+                        <select id="jointGender" name="jointGender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jointPan">Joint PAN:</label>
+                        <input type="text" id="jointPan" name="jointPan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Enter a valid PAN (e.g., ABCDE1234F)">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jointAadhar">Joint Aadhar:</label>
+                        <input type="text" id="jointAadhar" name="jointAadhar" pattern="\d{12}" title="Enter a valid 12-digit Aadhar number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="address">Address: <span>*</span></label>
+                    <input type="text" id="address" name="address" required>
+                    <div id="addressError" class="error-message">Address is required.</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="operationMode">Mode of Operation: <span>*</span></label>
+                    <select id="operationMode" name="operationMode" required>
+                        <option value="single">Single</option>
+                        <option value="either">Either or Survivor</option>
+                        <option value="both">Both or Survivor</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div id="operationModeError" class="error-message">Mode of Operation is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="accountTypeDetail">Account Type Detail: <span>*</span></label>
+                    <select id="accountTypeDetail" name="accountTypeDetail" required>
+                        <option value="current">Current</option>
+                        <option value="saving">Saving</option>
+                    </select>
+                    <div id="accountTypeDetailError" class="error-message">Account Type Detail is required.</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="securityQuestion">Security Question: <span>*</span></label>
+                    <select id="securityQuestion" name="securityQuestion" required>
+                        <option value="What is your pet's name?">What is your pet's name?</option>
+                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                        <option value="What was your first school?">What was your first school?</option>
+                    </select>
+                    <div id="securityQuestionError" class="error-message">Security Question is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="securityAnswer">Security Answer: <span>*</span></label>
+                    <input type="text" id="securityAnswer" name="securityAnswer" required>
+                    <div id="securityAnswerError" class="error-message">Security Answer is required.</div>
+                </div>
+            </div>
+            <button type="button" class="btn" onclick="registerAccount()">Submit</button>
+        </form>
+    </div>
+
+    <div id="resultContainer" class="result-container">
+        <h2>Registration Successful!</h2>
+        <p>Your reference number is: <span id="referenceNumber"></span></p>
+        <button class="btn" onclick="goToATM()">Click here to deposit</button>
+    </div>
+
+    <footer>
+        © 2024 Ideal Bank. All Rights Reserved.
+    </footer>
+
+    <script>
+        function toggleJointFields() {
+            const accountType = document.getElementById('accountType').value;
+            document.getElementById('jointFields').style.display = (accountType === 'joint') ? 'block' : 'none';
+        }
+
+        function registerAccount() {
+            const form = document.getElementById('registrationForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Clear all previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            let valid = true;
+            form.querySelectorAll('input, select').forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    const errorElement = document.getElementById(input.id + 'Error');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                    }
+                }
+            });
+
+            if (!valid) {
+                return;
+            }
+
+            fetch('http://localhost:3001/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('formContainer').style.display = 'none';
+                    document.getElementById('resultContainer').style.display = 'block';
+                    document.getElementById('referenceNumber').textContent = data.referenceNumber;
+                } else {
+                    alert('Registration failed: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function goToATM() {
+            window.location.href = 'atm.html'; // Navigate to the ATM deposit page
+        }
+    </script>
+
+</body>
+</html>

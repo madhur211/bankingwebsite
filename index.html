@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideal Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .header {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }   
+        .header img {
+            max-width: 350px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        .marquee {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 40px;
+            line-height: 40px;
+        }
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60vh;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .info {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .info h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .info p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+        .login {
+            flex: 0.4;
+            background-color: #ffffff;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .login h2 {
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group .input-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .form-group input[type="password"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            box-sizing: border-box;
+            margin-right: -1px; /* to remove extra gap */
+        }
+        .form-group .eye-icon {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            text-align: center;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #004085;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-group button:hover {
+            background-color: #003366;
+        }
+        .forgot-links {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-links button {
+            background-color: transparent;
+            color: #004085;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .footer {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="logo.png" alt="Ideal Bank Logo">
+    </header>
+
+    <div class="marquee">
+        <span>Welcome to Ideal Bank - Your Trusted Partner in Banking! Experience our exceptional services, innovative solutions, and personalized customer support.</span>
+    </div>
+
+    <div class="container">
+        <div class="info">
+            <h1>Welcome to Ideal Bank</h1>
+            <p>At Ideal Bank, we are committed to providing exceptional banking services tailored to meet your needs. Our comprehensive range of financial products and services includes:</p>
+            <ul style="text-align: left; margin: 0 auto; padding: 0; list-style-type: none;">
+                <li><strong>Personal Banking:</strong> Enjoy a variety of savings and checking account options designed to fit your lifestyle.</li>
+                <li><strong>Loans and Mortgages:</strong> We offer competitive rates on personal loans, home mortgages, and auto loans to help you achieve your financial goals.</li>
+                <li><strong>Investment Services:</strong> Explore our investment solutions, including retirement planning, wealth management, and more to grow your wealth.</li>
+                <li><strong>Online and Mobile Banking:</strong> Access your accounts anytime, anywhere with our secure and user-friendly online and mobile banking platforms.</li>
+                <li><strong>Customer Support:</strong> Our dedicated customer support team is available 24/7 to assist with any questions or concerns you may have.</li>
+            </ul>
+            <p>Join the Ideal Bank family today and experience the best in banking innovation, personalized service, and financial expertise. We look forward to serving you and helping you achieve your financial aspirations.</p>
+        </div>
+
+        <div class="login">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" required>
+                        <span class="eye-icon" onclick="togglePassword()">👁️</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="login()">Login</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="openNewAccount()">Open New Account</button>
+                </div>
+                <div class="forgot-links">
+                    <button type="button" onclick="forgotUsername()">Forgot Username?</button> | 
+                    <button type="button" onclick="forgotPassword()">Forgot Password?</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Ideal Bank. All Rights Reserved.
+    </footer>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const eyeIcon = document.querySelector('.eye-icon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.textContent = '🙈'; // Change icon to closed eye
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.textContent = '👁️'; // Change icon back to open eye
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Login successful');
+                    window.location.href = 'dashboard.html'; // Redirect to the dashboard page
+                } else {
+                    alert('Login failed: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function openNewAccount() {
+            window.location.href = '/register.html'; // Redirect to new account registration page
+        }
+
+        function forgotUsername() {
+            window.location.href = '/forgotUsername.html'; 
+        }
+
+        function forgotPassword() {
+            window.location.href = '/forgotPassword.html'; 
+        }
+    </script>
+</body>
+</html>

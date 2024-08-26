@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Deposit - Ideal Bank</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e9ecef;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            width: 420px;
+        }
+
+        .header {
+            background-color: #004085;
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            width: 200px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        h2 {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #004085;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 20px;
+        }
+
+        .customer-details {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .customer-details h3 {
+            margin-top: 0;
+            color: #004085;
+        }
+
+        .customer-details p {
+            margin: 5px 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Logo and Header Section -->
+        <div class="header">
+            <img src="logo.png" alt="Ideal Bank Logo">
+            <h2>ATM Deposit</h2>
+        </div>
+
+        <!-- Form Section -->
+        <form id="depositForm">
+            <div class="form-group">
+                <label for="referenceNumber">Enter Reference Number:</label>
+                <input type="text" id="referenceNumber" name="referenceNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="depositAmount">Deposit Amount:</label>
+                <input type="number" id="depositAmount" name="depositAmount" value="2000" readonly>
+            </div>
+            <button type="button" class="btn" id="depositBtn" onclick="deposit()">Deposit ₹2000</button>
+        </form>
+
+        <!-- Message Section -->
+        <div id="message" class="message"></div>
+
+        <!-- Customer Details Section -->
+        <div id="customerDetails" class="customer-details" style="display:none;">
+            <h3>Account Details</h3>
+            <p>Customer ID: <span id="customerId"></span></p>
+            <p>Account Number: <span id="accountNumber"></span></p>
+            <p>Login ID: <span id="loginId"></span></p>
+            <p>Password: <span id="password"></span></p>
+            <button class="btn" onclick="window.location.href='index.html'">Go to Login</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Ideal Bank. All Rights Reserved.
+    </footer>
+
+
+    <script>
+        function deposit() {
+            const referenceNumber = document.getElementById('referenceNumber').value;
+            const depositAmount = 2000;
+            const depositBtn = document.getElementById('depositBtn');
+
+            if (!referenceNumber) {
+                document.getElementById('message').innerHTML = '<p style="color: red;">Please enter your reference number.</p>';
+                return;
+            }
+
+            // Disable the button after the first click
+            depositBtn.disabled = true;
+
+            // Data to be sent to the server
+            const data = {
+                referenceNumber: referenceNumber,
+                depositAmount: depositAmount
+            };
+
+            // Send data to server
+            fetch('http://localhost:3001/atmDeposit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('message').innerHTML = '<p style="color: green;">Deposit successful! ₹2000 has been added to your account.</p>';
+                    // Display customer details
+                    document.getElementById('customerId').textContent = data.customerId;
+                    document.getElementById('accountNumber').textContent = data.accountNumber;
+                    document.getElementById('loginId').textContent = data.loginId;
+                    document.getElementById('password').textContent = data.password;
+                    document.getElementById('customerDetails').style.display = 'block';
+                } else {
+                    document.getElementById('message').innerHTML = '<p style="color: red;">Deposit failed. Please check your reference number and try again.</p>';
+                    depositBtn.disabled = false; // Re-enable the button if deposit fails
+                }
+            })
+            .catch((error) => {
+                document.getElementById('message').innerHTML = '<p style="color: red;">An error occurred. Please try again later.</p>';
+                depositBtn.disabled = false; // Re-enable the button if an error occurs
+            });
+        }
+    </script>
+
+</body>
+
+</html>
