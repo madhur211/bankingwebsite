@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ideal Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .header {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .header img {
+            max-width: 200px;
+        }
+        .header .date-time {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-align: left;
+        }
+        .header .date-time p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .header .date-time p img {
+            margin-right: 5px;
+            width: 20px;
+            height: 20px;
+        }
+        .header .profile-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: right;
+        }
+        .header .profile-actions button {
+            background-color: #004085;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .header .profile-actions button img {
+            margin-right: 5px;
+            width: 20px;
+            height: 20px;
+        }
+        .marquee {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 40px;
+            line-height: 40px;
+        }
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin-top: -20px; /* Adjusted margin for the header */
+        }
+        .profile-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            text-align: left;
+            display: none;
+        }
+        .profile-info h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .profile-tables {
+            display: flex;
+            justify-content: space-between;
+        }
+        .profile-tables .table-container {
+            width: 45%;
+        }
+        .profile-tables table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .profile-tables table, .profile-tables th, .profile-tables td {
+            border: 1px solid #ddd;
+        }
+        .profile-tables th, .profile-tables td {
+            padding: 10px;
+            text-align: left;
+        }
+        .profile-tables th {
+            background-color: #f4f4f4;
+            width: 30%;
+        }
+        .profile-tables td {
+            width: 70%;
+        }
+        .profile-tables td input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .btn-container {
+            text-align: center;
+        }
+        .btn-container button {
+            background-color: #004085;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .footer {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="logo.png" alt="Ideal Bank Logo">
+        <div class="date-time">
+            <p>
+                <img src="calendar.png" alt="Calendar Icon">
+                <span id="date"></span>
+            </p>
+            <p>
+                <img src="clock.png" alt="Clock Icon">
+                <span id="time"></span>
+            </p>
+        </div>
+        <div class="profile-actions">
+            <button onclick="showProfile()">
+                <img src="profile.png" alt="Profile Icon"> Profile
+            </button>
+            <button onclick="logout()">
+                <img src="logout.png" alt="Logout Icon"> Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="marquee">
+        <span id="marqueeText">Welcome to Ideal Bank - Your Trusted Partner in Banking!</span>
+    </div>
+
+    <div class="container">
+        <div class="profile-info" id="profileInfo">
+            <h1>Profile Information</h1>
+            <div class="profile-tables">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <td><input type="text" id="name" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Date of Birth</th>
+                            <td><input type="text" id="dob" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Gender</th>
+                            <td><input type="text" id="gender" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Aadhar</th>
+                            <td><input type="text" id="aadhar" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>PAN</th>
+                            <td><input type="text" id="pan" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Joint Name</th>
+                            <td><input type="text" id="jointName" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Joint Date of Birth</th>
+                            <td><input type="text" id="jointDob" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Joint Gender</th>
+                            <td><input type="text" id="jointGender" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Joint Aadhar</th>
+                            <td><input type="text" id="jointAadhar" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Joint PAN</th>
+                            <td><input type="text" id="jointPan" readonly></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Account Type</th>
+                            <td><input type="text" id="accountType" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Address</th>
+                            <td><input type="text" id="address" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td><input type="text" id="email" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Operation Mode</th>
+                            <td><input type="text" id="operationMode" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Account Type Detail</th>
+                            <td><input type="text" id="accountTypeDetail" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Account Number</th>
+                            <td><input type="text" id="accountNumber" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Customer ID</th>
+                            <td><input type="text" id="customerId" readonly></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button onclick="hideProfile()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Ideal Bank. All Rights Reserved.
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        }
+
+        function showProfile() {
+            document.getElementById('profileInfo').style.display = 'block';
+
+            const username = localStorage.getItem('username');
+            if (username) {
+                fetch(`http://localhost:3001/dashboard?username=${username}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const user = data.user;
+                            document.getElementById('name').value = user.name;
+                            document.getElementById('dob').value = user.dob;
+                            document.getElementById('gender').value = user.gender;
+                            document.getElementById('aadhar').value = user.aadhar;
+                            document.getElementById('pan').value = user.pan;
+                            document.getElementById('jointName').value = user.joint_name;
+                            document.getElementById('jointDob').value = user.joint_dob;
+                            document.getElementById('jointGender').value = user.joint_gender;
+                            document.getElementById('jointAadhar').value = user.joint_aadhar;
+                            document.getElementById('jointPan').value = user.joint_pan;
+                            document.getElementById('accountType').value = user.account_type;
+                            document.getElementById('address').value = user.address;
+                            document.getElementById('email').value = user.email;
+                            document.getElementById('operationMode').value = user.operation_mode;
+                            document.getElementById('accountTypeDetail').value = user.account_type_detail;
+                            document.getElementById('accountNumber').value = user.account_number;
+                            document.getElementById('customerId').value = user.customer_id;
+                        } else {
+                            console.log('Error fetching profile data:', data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function hideProfile() {
+            document.getElementById('profileInfo').style.display = 'none';
+        }
+
+        function displayDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString();
+            const time = now.toLocaleTimeString();
+            document.getElementById('date').textContent = `Date: ${date}`;
+            document.getElementById('time').textContent = `Time: ${time}`;
+        }
+
+        setInterval(displayDateTime, 1000);
+
+        window.onload = function() {
+            const username = localStorage.getItem('username');
+            if (username) {
+                fetch(`http://localhost:3001/dashboard?username=${username}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('marqueeText').textContent = `Welcome, ${data.user.name}! Thank you for banking with Ideal Bank!`;
+                        }
+                    });
+            }
+        };
+    </script>
+</body>
+</html>

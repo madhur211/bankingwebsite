@@ -229,22 +229,42 @@ app.post('/atmDeposit', (req, res) => {
 // Login route
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: 'Username and password required.' });
-    }
-
+    
     const query = 'SELECT * FROM customers WHERE login_id = ? AND password = ?';
     db.query(query, [username, password], (err, results) => {
         if (err) {
             console.error('Error executing query:', err);
-            return res.status(500).json({ success: false, message: 'Error logging in.' });
-        }
-        if (results.length === 0) {
-            return res.status(401).json({ success: false, message: 'Invalid login credentials.' });
+            return res.status(500).json({ success: false, message: 'Internal server error' });
         }
 
-        res.json({ success: true, message: 'Login successful!' });
+        if (results.length > 0) {
+            res.json({ success: true, user: results[0] });
+        } else {
+            res.json({ success: false, message: 'Invalid credentials' });
+        }
+    });
+});
+// Route to handle logout (for completeness)
+app.post('/logout', (req, res) => {
+    // Handle logout logic here if needed
+    res.json({ success: true, message: 'Logout successful' });
+});
+// Fetch user details for dashboard
+app.get('/dashboard', (req, res) => {
+    const { username } = req.query;
+
+    const query = 'SELECT * FROM customers WHERE login_id = ?';
+    db.query(query, [username], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+
+        if (results.length > 0) {
+            res.json({ success: true, user: results[0] });
+        } else {
+            res.json({ success: false, message: 'User not found' });
+        }
     });
 });
 

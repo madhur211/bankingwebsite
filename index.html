@@ -242,7 +242,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Login successful');
+                    localStorage.setItem('username', username); // Save username to localStorage
                     window.location.href = 'dashboard.html'; // Redirect to the dashboard page
                 } else {
                     alert('Login failed: ' + data.message);
