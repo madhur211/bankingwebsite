@@ -13,7 +13,7 @@
             text-align: center;
         }
         .header {
-            background-color: #004085;
+            background-color: #e9ecef;
             color: white;
             padding: 10px;
             text-align: center;
@@ -27,7 +27,7 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            color: white;
+            color: royalblue;
             text-align: left;
         }
         .header .date-time p {
@@ -35,17 +35,19 @@
             display: flex;
             align-items: center;
         }
-        .header .date-time p img {
+        .header .date-time p img,
+        .header .profile-actions button img {
             margin-right: 5px;
-            width: 20px;
-            height: 20px;
+            width: 40px; 
+            height: 40px; 
         }
         .header .profile-actions {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            text-align: right;
-        }
+    position: absolute;
+    top: 10px;
+    right: 10px;  
+    transform: translateX(-0.5cm); 
+    text-align: right;
+}
         .header .profile-actions button {
             background-color: #004085;
             color: white;
@@ -59,8 +61,8 @@
         }
         .header .profile-actions button img {
             margin-right: 5px;
-            width: 20px;
-            height: 20px;
+            width: 21px;
+            height: 21px;
         }
         .marquee {
             background-color: #004085;
