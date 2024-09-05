@@ -271,6 +271,10 @@
                             <th>Customer ID</th>
                             <td><input type="text" id="customerId" readonly></td>
                         </tr>
+                        <tr>
+                            <th>Account Opening Date</th>
+                            <td><input type="text" id="accOpeningDate" readonly></td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -301,12 +305,12 @@
                         if (data.success) {
                             const user = data.user;
                             document.getElementById('name').value = user.name;
-                            document.getElementById('dob').value = user.dob;
+                            document.getElementById('dob').value = formatDate(user.dob);  
                             document.getElementById('gender').value = user.gender;
                             document.getElementById('aadhar').value = user.aadhar;
                             document.getElementById('pan').value = user.pan;
                             document.getElementById('jointName').value = user.joint_name;
-                            document.getElementById('jointDob').value = user.joint_dob;
+                            document.getElementById('jointDob').value = formatDate(user.joint_dob); 
                             document.getElementById('jointGender').value = user.joint_gender;
                             document.getElementById('jointAadhar').value = user.joint_aadhar;
                             document.getElementById('jointPan').value = user.joint_pan;
@@ -317,6 +321,7 @@
                             document.getElementById('accountTypeDetail').value = user.account_type_detail;
                             document.getElementById('accountNumber').value = user.account_number;
                             document.getElementById('customerId').value = user.customer_id;
+                            document.getElementById('accOpeningDate').value = formatDate(user.acc_opening_date);
                         } else {
                             console.log('Error fetching profile data:', data.error);
                         }
@@ -324,7 +329,13 @@
                     .catch(error => console.error('Error:', error));
             }
         }
-
+        function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);  // Ensure 2 digits for month
+    const day = ('0' + date.getDate()).slice(-2);  // Ensure 2 digits for day
+    return `${year}-${month}-${day}`;  // Returning formatted date as YYYY-MM-DD
+}
         function hideProfile() {
             document.getElementById('profileInfo').style.display = 'none';
         }

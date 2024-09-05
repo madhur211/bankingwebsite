@@ -106,7 +106,6 @@ function checkUniqueField(field, value, callback) {
     });
 }
 
-// Registration route
 app.post('/register', (req, res) => {
     const {
         name, dob, gender, pan, aadhar, accountType,
@@ -116,7 +115,8 @@ app.post('/register', (req, res) => {
     } = req.body;
 
     const referenceNumber = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    
+    const accOpeningDate = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
     const fieldsToCheck = [
         { field: 'email', value: email },
         { field: 'login_id', value: req.body.login_id },
@@ -142,7 +142,6 @@ app.post('/register', (req, res) => {
             }
             checksRemaining -= 1;
             if (checksRemaining === 0) {
-                // All checks passed, insert the record
                 let query;
                 let values;
 
@@ -150,26 +149,26 @@ app.post('/register', (req, res) => {
                     query = `
                         INSERT INTO customers (
                             name, dob, gender, pan, aadhar, joint_name, joint_dob, joint_gender, joint_pan, joint_aadhar,
-                            account_type, address, email, operation_mode, account_type_detail, reference_number, security_question, security_answer
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            account_type, address, email, operation_mode, account_type_detail, reference_number, security_question, security_answer, acc_opening_date
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
                     `;
                     values = [
                         name, dob, gender, pan, aadhar, jointName, jointDob, jointGender, jointPan, jointAadhar,
-                        accountType, address, email, operationMode, accountTypeDetail, referenceNumber, securityQuestion, securityAnswer
+                        accountType, address, email, operationMode, accountTypeDetail, referenceNumber, securityQuestion, securityAnswer, accOpeningDate
                     ];
                 } else {
                     query = `
                         INSERT INTO customers (
                             name, dob, gender, pan, aadhar, account_type, address, email, operation_mode, account_type_detail,
-                            reference_number, security_question, security_answer
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+                            reference_number, security_question, security_answer, acc_opening_date
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
                     `;
                     values = [
                         name, dob, gender, pan, aadhar, accountType, address, email, operationMode, accountTypeDetail,
-                        referenceNumber, securityQuestion, securityAnswer
+                        referenceNumber, securityQuestion, securityAnswer, accOpeningDate
                     ];
                 }
-                
+
                 db.query(query, values, (err, result) => {
                     if (err) {
                         console.error('Error executing query:', err);
@@ -181,6 +180,7 @@ app.post('/register', (req, res) => {
         });
     });
 });
+
 
 // ATM deposit route
 app.post('/atmDeposit', (req, res) => {

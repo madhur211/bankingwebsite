@@ -247,6 +247,8 @@
                     <div id="securityAnswerError" class="error-message">Security Answer is required.</div>
                 </div>
             </div>
+            <input type="hidden" id="acc_opening_date" name="acc_opening_date">
+
             <button type="button" class="btn" onclick="registerAccount()">Submit</button>
         </form>
     </div>
@@ -268,6 +270,10 @@
         }
 
         function registerAccount() {
+            // Set current date in the hidden field
+            const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            document.getElementById('acc_opening_date').value = currentDate;
+
             const form = document.getElementById('registrationForm');
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
@@ -311,6 +317,7 @@
                 console.error('Error:', error);
             });
         }
+
 
         function goToATM() {
             window.location.href = 'atm.html'; // Navigate to the ATM deposit page
