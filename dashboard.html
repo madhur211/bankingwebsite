@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Ideal Bank</title>
     <style>
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -156,14 +157,183 @@
             cursor: pointer;
         }
         .footer {
-            background-color: #004085;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
+  background-color: #004085;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  margin: 0; /* Add this property */
+}
+        .main-content {
+            margin: 20px;
         }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button-row button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 0;
+            border-right: 2px solid white;
+            cursor: pointer;
+            flex: 1;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-row button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-row button:last-child {
+            border-right: none;
+        }
+
+     /* Fund Transfer Panel */
+     .fund-transfer {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none; /* Hidden initially */
+            max-width: 800px;
+            margin: auto; /* Center the panel */
+        }
+
+        .fund-transfer h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center; /* Center align title */
+        }
+
+        /* Flexbox styling for side-by-side buttons with dynamic resizing */
+        .fund-transfer-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* Adds space between buttons */
+            justify-content: center; /* Center the buttons */
+        }
+
+        .fund-transfer-options button {
+            flex: 1 1 180px;
+            max-width: 300px;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .fund-transfer-options button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive layout for smaller screens */
+        @media (max-width: 768px) {
+            .fund-transfer-options button {
+                flex: 1 1 100%;
+                font-size: 14px;
+            }
+        }
+
+        /* Form styles */
+        
+        .transfer-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        max-width: 500px; /* Adjust as needed */
+        margin: 0 auto;
+    }
+
+    .transfer-form label {
+        font-size: 1.2em;
+    }
+
+    /* Common styles for form fields */
+.transfer-form input,
+.transfer-form select {
+    font-size: 1.2em; /* Increase font size for better visibility */
+    padding: 12px; /* Increase padding for better touch */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%; /* Full width for each field */
+    box-sizing: border-box; /* Ensure padding and border are included in total width */
+    margin-bottom: 15px; /* Add space between fields */
+}
+
+/* Ensures each label is on a separate line */
+.transfer-form label {
+    display: block; /* Make labels block elements to ensure they are on their own line */
+    font-size: 1.2em; /* Increase font size for better visibility */
+    margin-bottom: 5px; /* Space between label and input */
+}
+/* Add styles to hide and show elements */
+.upi-buttons, .upi-form, .send-money-form {
+    display: none;
+}
+
+/* Styles for RTGS form */
+.rtgs-form {
+    display: flex;
+    flex-direction: column; /* Stack fields vertically */
+    gap: 15px; /* Space between fields */
+    padding: 20px; /* Padding around the form */
+    border: 1px solid #ccc; /* Border around the form */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+/* Specific styles for form description and errors */
+.rtgs-form .description {
+    font-size: 1em; /* Font size for instructions */
+    color: #555; /* Darker color for text */
+    margin-bottom: 20px; /* Space below description */
+}
+
+.rtgs-form .error {
+    color: #d9534f; /* Error text color */
+    font-size: 0.9em; /* Slightly smaller font size for errors */
+}
+/* Demand Draft Form Styles */
+.dd-form {
+    display: none; /* Hidden initially */
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+}
+
+.dd-form h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.dd-form .form-info {
+    font-size: 1em;
+    color: #555;
+    margin-top: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -192,6 +362,129 @@
     <div class="marquee">
         <span id="marqueeText">Welcome to Ideal Bank - Your Trusted Partner in Banking!</span>
     </div>
+    <div class="main-content">
+        <div class="button-row">
+            <button onclick="openFundTransfers()">Fund Transfers</button>
+            <button onclick="openBillPayments()">Bill Payments & Recharges</button>
+            <button onclick="openPassbook()">Passbook</button>
+            <button onclick="openFD()">Fixed Deposits</button>
+            <button onclick="openLoanManagement()">Loan Management</button>
+            <button onclick="openAccountClosure()">Account Closure</button>
+        </div>
+  <!-- Fund Transfer Panel -->
+  <div class="fund-transfer" id="fundTransferPanel">
+    <h2>Fund Transfer Options</h2>
+    <div class="fund-transfer-options">
+        <button onclick="openUPI()">UPI</button>
+        <button onclick="openRTGS()">RTGS (More than 2 Lakhs)</button>
+        <button onclick="openNEFT()">NEFT</button>
+        <button onclick="openDD()">Demand Draft (DD)</button>
+       
+    </div>
+   <!-- Transfer Form (Initially hidden) -->
+  
+       <!-- UPI Buttons Container -->
+<div id="upi-buttons" style="display: none;">
+    <button onclick="generateUPIID()">Generate UPI ID</button>
+    <button onclick="sendMoneyUPI()">Send Money</button>
+</div>
+
+<!-- UPI Form to set UPI ID and PIN -->
+<div class="upi-form" style="display: none;">
+    <label for="upi-id">UPI ID:</label>
+    <input type="text" id="upi-id" readonly>
+    <label for="pin">PIN:</label>
+    <input type="password" id="pin" maxlength="6">
+    <button onclick="setUPIIDAndPIN()">Set UPI ID and PIN</button>
+</div>
+
+<!-- UPI Form to send money using UPI -->
+<div class="send-money-form" style="display: none;">
+    <label for="upi-id-send">UPI ID:</label>
+    <input type="text" id="upi-id-send">
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount">
+    <button onclick="sendMoneyUPI()">Send</button>
+</div>
+<div class="transfer-form rtgs-form" id="rtgsForm">
+    <label for="accNoRTGS">Account Number</label>
+    <input type="text" id="accNoRTGS" placeholder="Enter account number for RTGS">
+
+    <label for="customerNameRTGS">Customer Name</label>
+    <input type="text" id="customerNameRTGS" placeholder="Enter customer name">
+
+    <label for="accTypeRTGS">Account Type</label>
+    <select id="accTypeRTGS">
+        <option value="savings">Savings</option>
+        <option value="current">Current</option>
+    </select>
+
+    <label for="particularsRTGS">Particulars</label>
+    <input type="text" id="particularsRTGS" placeholder="Enter particulars">
+
+    <label for="amountRTGS">Amount (Minimum 2,00,000)</label>
+    <input type="number" id="amountRTGS" placeholder="Enter amount">
+
+    <p class="form-info">For RTGS, the amount must be greater than 2,00,000.</p>
+
+    <button onclick="sendMoneyRTGS()">Send RTGS</button>
+
+    <!-- Error message for RTGS validation -->
+    <div class="error-message" id="rtgsError">Amount must be greater than 2,00,000 for RTGS transfers.</div>
+</div>
+
+<!-- NEFT Transfer Form (Initially hidden) -->
+<div class="transfer-form neft-form" id="neftForm">
+    <label for="accNoNEFT">Account Number</label>
+    <input type="text" id="accNoNEFT" placeholder="Enter account number for NEFT">
+
+    <label for="customerNameNEFT">Customer Name</label>
+    <input type="text" id="customerNameNEFT" placeholder="Enter customer name">
+
+    <label for="accTypeNEFT">Account Type</label>
+    <select id="accTypeNEFT">
+        <option value="savings">Savings</option>
+        <option value="current">Current</option>
+    </select>
+
+    <label for="particularsNEFT">Particulars</label>
+    <input type="text" id="particularsNEFT" placeholder="Enter particulars">
+
+    <label for="amountNEFT">Amount</label>
+    <input type="number" id="amountNEFT" placeholder="Enter amount">
+
+    <p class="form-info">NEFT allows any amount to be transferred without limit.</p>
+
+    <button onclick="sendMoneyNEFT()">Send NEFT</button>
+</div>
+<!-- Demand Draft Form (Initially hidden) -->
+<div class="transfer-form dd-form" id="ddForm">
+    <h2>Demand Draft Form</h2>
+    <label for="payeeName">Payee Name</label>
+    <input type="text" id="payeeName" placeholder="Enter payee name">
+
+    <label for="ddAmount">Amount</label>
+    <input type="number" id="ddAmount" placeholder="Enter amount">
+
+    <p class="form-info">Charges as per applicable:<b>dd is not for less than Rs10,000</b>
+        <br>Amounts between Rs 10,000 and Rs 20,000: Rs 100
+        <br>Amounts between Rs 20,000 and Rs 50,000: Rs 200
+        <br> Amounts between Rs 50,000 and Rs 1,00,000: Rs 300
+        <br> Amounts between Rs 1,00,000 and Rs 2,00,000: Rs 500
+        <br> Amounts above Rs 2,00,000: Rs 700
+    </p>
+
+    <button onclick="processDD()">Proceed</button>
+
+    <!-- Random reference number and message -->
+    <div id="ddResult" style="display: none;">
+        <p id="referenceNumber"></p>
+        <p>Visit the nearest branch to collect your Demand Draft. No queue is required.</p>
+    </div>
+</div>
+</div>
+
+      
 
     <div class="container">
         <div class="profile-info" id="profileInfo">
@@ -283,6 +576,7 @@
             </div>
         </div>
     </div>
+    
 
     <footer class="footer">
         &copy; 2024 Ideal Bank. All Rights Reserved.
@@ -295,6 +589,11 @@
         }
 
         function showProfile() {
+            document.getElementById('profileInfo').style.display = 'block';
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('rtgsForm').style.display = 'none';
+    document.getElementById('neftForm').style.display = 'none';
+    document.getElementById('ddForm').style.display = 'none';
             document.getElementById('profileInfo').style.display = 'block';
 
             const username = localStorage.getItem('username');
@@ -336,10 +635,12 @@
     const day = ('0' + date.getDate()).slice(-2);  // Ensure 2 digits for day
     return `${year}-${month}-${day}`;  // Returning formatted date as YYYY-MM-DD
 }
-        function hideProfile() {
-            document.getElementById('profileInfo').style.display = 'none';
-        }
 
+function hideProfile() {
+    document.getElementById('profileInfo').style.display = 'none'; // Hide profile section
+    document.getElementById('fundTransferPanel').style.display = 'block'; // Show fund transfer panel
+    // Show other sections as needed
+}
         function displayDateTime() {
             const now = new Date();
             const date = now.toLocaleDateString();
@@ -350,6 +651,188 @@
 
         setInterval(displayDateTime, 1000);
 
+        let transferType = ''; // To keep track of the selected transfer type
+
+function openFundTransfers() {
+    document.getElementById('fundTransferPanel').style.display = 'block'; // Show fund transfer panel
+    document.getElementById('rtgsForm').style.display = 'none'; // Hide both forms initially
+    document.getElementById('neftForm').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+}
+let upiButtonsVisible = false;
+let upiID = '';
+let pin = '';
+
+function openUPI() {
+    transferType = 'UPI';
+
+    document.getElementById('upi-buttons').style.display = 'block'; // Show UPI buttons
+
+    upiButtonsVisible = true;
+
+    hideOtherForms(); // Hide other forms
+}
+function hideOtherForms() {
+    document.getElementById('rtgsForm').style.display = 'none';
+    document.getElementById('neftForm').style.display = 'none';
+    document.getElementById('ddForm').style.display = 'none';
+    document.getElementById('upiForm').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none';
+}
+
+function generateUPIID() {
+    // Fetch mobile number from profile
+    const mobileNumber = getMobileNumberFromProfile();
+    upiID = `${mobileNumber}@idealbank`;
+    document.getElementById('upi-id').value = upiID;
+    document.querySelector('.upi-form').style.display = 'block'; // Show UPI form
+    document.getElementById('upi-buttons').style.display = 'none'; // Hide UPI buttons
+}
+
+function setUPIIDAndPIN() {
+    pin = document.getElementById('pin').value;
+    if (pin.length === 6) {
+        // Store the UPI ID and PIN securely
+        storeUPIIDAndPIN(upiID, pin);
+        // Send money using UPI
+        sendMoneyUPI();
+    } else {
+        alert('Invalid PIN. Please enter a 6-digit PIN.');
+    }
+}
+function sendMoneyUPI() {
+  const upiIDToSend = document.getElementById('upi-id-send').value;
+  const amount = document.getElementById('amount').value;
+  if (upiIDToSend === upiID && amount > 0) {
+    // Send money using UPI
+    sendMoneyUsingUPI(upiID, amount);
+  } else {
+    alert('Invalid UPI ID or amount.');
+  }
+}
+
+// Function to fetch mobile number from profile
+function getMobileNumberFromProfile() {
+  // Implement logic to fetch mobile number from profile
+  return '9876543210'; // Replace with actual implementation
+}
+
+// Function to store UPI ID and PIN securely
+function storeUPIIDAndPIN(upiID, pin) {
+  // Implement logic to store UPI ID and PIN securely
+  console.log(`UPI ID and PIN stored: ${upiID} and ${pin}`);
+}
+
+// Function to send money using UPI
+function sendMoneyUsingUPI(upiID, amount) {
+  // Implement logic to send money using UPI
+  console.log(`Money sent using UPI: ${upiID} and amount ${amount}`);
+}
+function hideUPIButtons() {
+    document.getElementById('upi-buttons').style.display = 'none';
+}
+function openRTGS() {
+    alert('RTGS is only available for amounts over 2,00,000.'); // Pop-up alert for RTGS
+    transferType = 'RTGS';
+    document.getElementById('rtgsForm').style.display = 'block'; // Show RTGS form
+    document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
+    document.getElementById('ddForm').style.display = 'none'; // Hide DD form
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    hideUPIButtons();
+
+    resetForm('rtgs'); // Reset RTGS form
+}
+
+function openNEFT() {
+    transferType = 'NEFT';
+    document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
+    document.getElementById('neftForm').style.display = 'block'; // Show NEFT form
+    document.getElementById('ddForm').style.display = 'none'; // Hide DD form
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    hideUPIButtons();
+
+    resetForm('neft'); // Reset NEFT form
+}
+
+function resetForm(type) {
+    if (type === 'rtgs') {
+        document.getElementById('accNoRTGS').value = '';
+        document.getElementById('customerNameRTGS').value = '';
+        document.getElementById('accTypeRTGS').value = '';
+        document.getElementById('particularsRTGS').value = '';
+        document.getElementById('amountRTGS').value = '';
+        document.getElementById('rtgsError').style.display = 'none'; // Hide RTGS error message
+    } else if (type === 'neft') {
+        document.getElementById('accNoNEFT').value = '';
+        document.getElementById('customerNameNEFT').value = '';
+        document.getElementById('accTypeNEFT').value = '';
+        document.getElementById('particularsNEFT').value = '';
+        document.getElementById('amountNEFT').value = '';
+    }
+}
+
+function sendMoneyRTGS() {
+    const amount = parseFloat(document.getElementById('amountRTGS').value);
+    const rtgsError = document.getElementById('rtgsError');
+
+    if (transferType === 'RTGS' && amount <= 200000) {
+        rtgsError.style.display = 'block'; // Show error message for RTGS
+    } else {
+        rtgsError.style.display = 'none'; // Hide error message if conditions are met
+        alert(`Sending ${transferType} transfer...`);
+        // Here you can add the logic to process the transfer
+    }
+}
+
+function sendMoneyNEFT() {
+    alert(`Sending NEFT transfer...`);
+    // Logic to process NEFT transfer
+}
+
+// Placeholder functions for other transfer types
+
+
+function openDD() {
+    transferType = 'DD';
+    document.getElementById('ddForm').style.display = 'block'; // Show DD form
+    document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
+    document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
+    hideUPIButtons();
+
+
+    resetForm('dd'); // Reset DD form
+}
+function resetForm(type) {
+    if (type === 'dd') {
+        document.getElementById('payeeName').value = '';
+        document.getElementById('ddAmount').value = '';
+        document.getElementById('ddResult').style.display = 'none'; // Hide DD result
+    }
+}
+
+function processDD() {
+    const payeeName = document.getElementById('payeeName').value;
+    const amount = parseFloat(document.getElementById('ddAmount').value);
+    const ddResult = document.getElementById('ddResult');
+    const referenceNumber = Math.floor(Math.random() * 1000000000); // Random 9-digit number
+
+    if (!payeeName || isNaN(amount) || amount <= 0) {
+        alert('Please fill in all fields correctly.');
+        return;
+    }
+
+    let charges = 0;
+    if (amount > 10000) {
+        charges = 100; // Fixed charge
+    }
+
+    ddResult.style.display = 'block'; // Show result
+    document.getElementById('referenceNumber').textContent = `Reference Number: ${referenceNumber}`;
+
+    // Logic to process DD (e.g., send details to server) can be added here
+}
+
+      
         window.onload = function() {
             const username = localStorage.getItem('username');
             if (username) {
