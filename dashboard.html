@@ -115,6 +115,7 @@
         .profile-tables {
             display: flex;
             justify-content: space-between;
+            overflow-x: auto;
         }
         .profile-tables .table-container {
             width: 45%;
@@ -123,6 +124,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
         .profile-tables table, .profile-tables th, .profile-tables td {
             border: 1px solid #ddd;
@@ -130,10 +132,14 @@
         .profile-tables th, .profile-tables td {
             padding: 10px;
             text-align: left;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
         }
         .profile-tables th {
             background-color: #f4f4f4;
             width: 30%;
+
         }
         .profile-tables td {
             width: 70%;
@@ -333,7 +339,276 @@
     color: #555;
     margin-top: 10px;
 }
+.bill-payments {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden */
+    max-width: 800px;
+    margin: auto; /* Center the panel */
+}
 
+.bill-payments h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center; /* Center align title */
+}
+
+.bill-payment-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Adds space between buttons */
+    justify-content: center; /* Center the buttons */
+}
+
+.bill-payment-options button {
+    flex: 1 1 180px;
+    max-width: 300px;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.bill-payment-options button:hover {
+    background-color: #0056b3;
+}
+.passbook-table {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto; /* Center the panel */
+}
+
+.passbook-table h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center; /* Center align title */
+}
+
+.passbook-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.passbook-table th, .passbook-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.passbook-table th {
+    background-color: #f0f0f0;
+}
+
+.date-range-selection {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Adds space between inputs and button */
+    justify-content: center; /* Center the inputs and button */
+}
+
+.date-range-selection label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.date-range-selection input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#generateStatementButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#generateStatementButton:hover {
+    background-color: #0056b3;
+}
+.account-closure-form {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto; /* Center the panel */
+}
+
+.account-closure-form h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center; /* Center align title */
+}
+
+.account-closure-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.account-closure-form label {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.account-closure-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    height: 100px;
+}
+
+.account-closure-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.account-closure-form button:hover {
+    background-color: #0056b3;
+}
+
+.confirmation-dialog {
+    display: none; /* Hide by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.transfer-details-form {
+    display: none; /* Hide by default */
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto; /* Center the panel */
+}
+.fd-form {
+    background-color: #f7f7f7;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 40px auto; /* Center the panel */
+}
+
+.fd-form h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Center align title */
+    color: #333;
+}
+
+.fd-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.fd-form select, .fd-form input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.fd-form button {
+    background-color:#0056b3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.fd-form button:hover {
+    background-color:#0056b3;
+}
+.loan-mgmt-form {
+    background-color: #f7f7f7;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 40px auto; /* Center the panel */
+}
+
+.loan-mgmt-form h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Center align title */
+    color: #333;
+}
+
+.loan-mgmt-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.loan-mgmt-form select, .loan-mgmt-form input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.loan-mgmt-form button {
+    background-color:#0056b3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.loan-mgmt-form button:hover {
+    background-color:#0056b3;
+}
     </style>
 </head>
 <body>
@@ -371,41 +646,185 @@
             <button onclick="openLoanManagement()">Loan Management</button>
             <button onclick="openAccountClosure()">Account Closure</button>
         </div>
-  <!-- Fund Transfer Panel -->
+        
+
+
+        <!-- Bill Payments Section -->
+
+<div class="bill-payments" id="billPaymentsSection" style="display: none;">
+    <h2>Bill Payments & Recharges</h2>
+    <div class="bill-payment-options">
+        <button id="electricityBillButton">Electricity Bill</button>
+        <button id="waterBillButton">Water Bill</button>
+        <button id="lpgBillButton">LPG Bill</button>
+        <button id="mobileRechargeButton">Mobile Recharge</button>
+    </div>
+</div>
+<!-- Add the Loan Management form container element -->
+<div class="loan-mgmt-form" id="loanMgmtFormContainer" style="display: none;">
+    <h2>Loan Management</h2>
+    <form>
+        <!-- Button to check previous applied loans -->
+        <button id="checkPreviousLoans" onclick="checkPreviousLoans()">Check Previous Applied Loans</button>
+        <br><br>
+
+        <!-- Loan type dropdown -->
+        <label for="loanType">Loan Type:</label>
+        <select id="loanType" name="loanType">
+            <!-- Scroll options for loan types -->
+            <option value="">Select Loan Type</option>
+            <option value="Personal Loan">Personal Loan</option>
+            <option value="Home Loan">Home Loan</option>
+            <option value="Car Loan">Car Loan</option>
+            <!-- Add more options as needed -->
+        </select>
+        <br><br>
+
+        <!-- Amount input field -->
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" />
+        <br><br>
+
+        <!-- Tenure input field -->
+        <label for="tenure">Tenure:</label>
+        <input type="number" id="tenure" name="tenure" />
+        <br><br>
+
+        <!-- Submit button -->
+        <button id="submitLoan" onclick="submitLoan()">Submit</button>
+    </form>
+</div>
+
+<!-- Account Closure Form -->
+<div class="account-closure-form" id="accountClosureFormContainer">
+    <h2>Account Closure</h2>
+    <form>
+        <label for="reason">Reason for Closure:</label>
+        <textarea id="reason" name="reason"></textarea>
+        <button id="closeAccountButton" onclick="closeAccount()">Close Account</button>
+    </form>
+
+    <!-- Confirmation Dialog -->
+    <div class="confirmation-dialog" id="confirmationDialog">
+        <h2>Confirm Account Closure</h2>
+        <p>Are you sure you want to close your account?</p>
+        <button id="confirmButton" onclick="confirmAccountClosure()">Yes, Close Account</button>
+        <button id="cancelButton" onclick="cancelAccountClosure()">Cancel</button>
+    </div>
+
+    <!-- Transfer Details Form -->
+    <div class="transfer-details-form" id="transferDetailsFormContainer">
+        <h2>Transfer Details</h2>
+        <form>
+            <label for="newAccountNumber">New Account Number:</label>
+            <input type="text" id="newAccountNumber" name="newAccountNumber" />
+            <label for="newAccountName">New Account Name:</label>
+            <input type="text" id="newAccountName" name="newAccountName" />
+        </form>
+    </div>
+</div>
+<!-- Add the FD form container element -->
+<div class="fd-form" id="fdFormContainer" style="display: none;">
+    <h2>Fixed Deposit</h2>
+    <form>
+        <label for="fdName">Name of FD:</label>
+        <select id="fdName" name="fdName">
+            <!-- Scroll options for FD names -->
+            <option value="">Select FD Name</option>
+            <option value="FD 1">FD 1</option>
+            <option value="FD 2">FD 2</option>
+            <option value="FD 3">FD 3</option>
+            <!-- Add more options as needed -->
+        </select>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" />
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" />
+        <label for="tenure">Tenure:</label>
+        <input type="number" id="tenure" name="tenure" />
+        <label for="roi">Rate of Interest (ROI):</label>
+        <input type="number" id="roi" name="roi" />
+        <button id="submitFD" onclick="submitFD()">Submit</button>
+    </form>
+
+    <!-- Button to check previous FDs -->
+    <button id="checkPreviousFD" onclick="checkPreviousFD()">Check Previous FDs</button>
+</div>
+
+
+  <!-- Passbook Table -->
+  <div class="passbook-table" id="passbookTableContainer">
+    <h2>Passbook</h2>
+    <table id="passbookTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody id="passbookTableBody">
+            <!-- Table data will be displayed here -->
+        </tbody>
+    </table>
+
+    <!-- Date Range Selection -->
+    <div class="date-range-selection">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" />
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" />
+        <button id="generateStatementButton" onclick="generateStatement()">Generate Statement</button>
+    </div>
+    
+   
+</div>
+
+
+
+<!-- Fund Transfer Panel -->
   <div class="fund-transfer" id="fundTransferPanel">
     <h2>Fund Transfer Options</h2>
     <div class="fund-transfer-options">
-        <button onclick="openUPI()">UPI</button>
-        <button onclick="openRTGS()">RTGS (More than 2 Lakhs)</button>
-        <button onclick="openNEFT()">NEFT</button>
-        <button onclick="openDD()">Demand Draft (DD)</button>
+        <button id="upiButton" onclick="openUPI()">UPI</button>
+        <button id="rtgsButton" onclick="openRTGS()">RTGS (More than 2 Lakhs)</button>
+        <button id="neftButton" onclick="openNEFT()">NEFT</button>
+        <button id="ddButton" onclick="openDD()">Demand Draft (DD)</button>
        
     </div>
    <!-- Transfer Form (Initially hidden) -->
   
-       <!-- UPI Buttons Container -->
-<div id="upi-buttons" style="display: none;">
-    <button onclick="generateUPIID()">Generate UPI ID</button>
-    <button onclick="sendMoneyUPI()">Send Money</button>
+   <!-- UPI ID Generation and Send Money Section -->
+<div class="transfer-form upi-form" id="upiForm">
+    <h2>UPI ID Generation and Send Money</h2>
+
+    <!-- Main Buttons -->
+    <div id="upiMainButtons">
+        <button onclick="showUPIGeneration()">Generate UPI ID</button>
+        <button onclick="showSendMoney()">Send Money</button>
+    </div>
+
+   
+    <!-- Send Money Section -->
+    <div id="upiSendMoneySection" style="display: none; margin-top: 20px;">
+        <h3>Send Money via UPI</h3>
+        <label for="upiIDSend">UPI ID:</label>
+        <input type="text" id="upiIDSend" readonly>
+
+        <label for="amountSend">Amount:</label>
+        <input type="number" id="amountSend" placeholder="Enter Amount">
+
+        <label for="pinSend">PIN:</label>
+        <input type="password" id="pinSend" placeholder="Enter UPI PIN">
+
+        <button onclick="confirmSendMoney()">Send Money</button>
+        <button onclick="backToMain()">Back</button>
+    </div>
 </div>
 
-<!-- UPI Form to set UPI ID and PIN -->
-<div class="upi-form" style="display: none;">
-    <label for="upi-id">UPI ID:</label>
-    <input type="text" id="upi-id" readonly>
-    <label for="pin">PIN:</label>
-    <input type="password" id="pin" maxlength="6">
-    <button onclick="setUPIIDAndPIN()">Set UPI ID and PIN</button>
-</div>
 
-<!-- UPI Form to send money using UPI -->
-<div class="send-money-form" style="display: none;">
-    <label for="upi-id-send">UPI ID:</label>
-    <input type="text" id="upi-id-send">
-    <label for="amount">Amount:</label>
-    <input type="number" id="amount">
-    <button onclick="sendMoneyUPI()">Send</button>
-</div>
 <div class="transfer-form rtgs-form" id="rtgsForm">
     <label for="accNoRTGS">Account Number</label>
     <input type="text" id="accNoRTGS" placeholder="Enter account number for RTGS">
@@ -427,7 +846,7 @@
 
     <p class="form-info">For RTGS, the amount must be greater than 2,00,000.</p>
 
-    <button onclick="sendMoneyRTGS()">Send RTGS</button>
+    <button onclick="sendRTGS()">Send RTGS</button>
 
     <!-- Error message for RTGS validation -->
     <div class="error-message" id="rtgsError">Amount must be greater than 2,00,000 for RTGS transfers.</div>
@@ -453,9 +872,9 @@
     <label for="amountNEFT">Amount</label>
     <input type="number" id="amountNEFT" placeholder="Enter amount">
 
-    <p class="form-info">NEFT allows any amount to be transferred without limit.</p>
+    <p class="form-info">NEFT allows any amount to be transferred less then 2 Lakhs.</p>
 
-    <button onclick="sendMoneyNEFT()">Send NEFT</button>
+    <button onclick="sendNEFT()">Send NEFT</button>
 </div>
 <!-- Demand Draft Form (Initially hidden) -->
 <div class="transfer-form dd-form" id="ddForm">
@@ -481,6 +900,8 @@
         <p id="referenceNumber"></p>
         <p>Visit the nearest branch to collect your Demand Draft. No queue is required.</p>
     </div>
+
+
 </div>
 </div>
 
@@ -549,6 +970,14 @@
                             <td><input type="text" id="email" readonly></td>
                         </tr>
                         <tr>
+                            <th>UPI ID</th>
+                            <td><input type="text" id="upiId" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Mobile Number</th>
+                            <td><input type="text" id="mobileNumber" readonly></td>
+                        </tr>
+                        <tr>
                             <th>Operation Mode</th>
                             <td><input type="text" id="operationMode" readonly></td>
                         </tr>
@@ -595,6 +1024,16 @@
     document.getElementById('neftForm').style.display = 'none';
     document.getElementById('ddForm').style.display = 'none';
             document.getElementById('profileInfo').style.display = 'block';
+            document.getElementById('billPaymentsSection').style.display = 'none';
+            const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+
+
+
 
             const username = localStorage.getItem('username');
             if (username) {
@@ -621,6 +1060,8 @@
                             document.getElementById('accountNumber').value = user.account_number;
                             document.getElementById('customerId').value = user.customer_id;
                             document.getElementById('accOpeningDate').value = formatDate(user.acc_opening_date);
+                            document.getElementById('upiId').value = user.upi_id;
+                            document.getElementById('mobileNumber').value = user.mobile_number;
                         } else {
                             console.log('Error fetching profile data:', data.error);
                         }
@@ -629,16 +1070,19 @@
             }
         }
         function formatDate(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);  // Ensure 2 digits for month
-    const day = ('0' + date.getDate()).slice(-2);  // Ensure 2 digits for day
-    return `${year}-${month}-${day}`;  // Returning formatted date as YYYY-MM-DD
+    if (dateString === null || dateString === 'NULL') {
+        return 'Not Available';
+    } else {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);  // Ensure 2 digits for month
+        const day = ('0' + date.getDate()).slice(-2);  // Ensure 2 digits for day
+        return `${year}-${month}-${day}`;  // Returning formatted date as YYYY-MM-DD
+    }
 }
-
 function hideProfile() {
     document.getElementById('profileInfo').style.display = 'none'; // Hide profile section
-    document.getElementById('fundTransferPanel').style.display = 'block'; // Show fund transfer panel
+    document.getElementById('fundTransferPanel').style.display = 'none'; // Show fund transfer panel
     // Show other sections as needed
 }
         function displayDateTime() {
@@ -658,20 +1102,15 @@ function openFundTransfers() {
     document.getElementById('rtgsForm').style.display = 'none'; // Hide both forms initially
     document.getElementById('neftForm').style.display = 'none';
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+
 }
-let upiButtonsVisible = false;
-let upiID = '';
-let pin = '';
 
-function openUPI() {
-    transferType = 'UPI';
-
-    document.getElementById('upi-buttons').style.display = 'block'; // Show UPI buttons
-
-    upiButtonsVisible = true;
-
-    hideOtherForms(); // Hide other forms
-}
 function hideOtherForms() {
     document.getElementById('rtgsForm').style.display = 'none';
     document.getElementById('neftForm').style.display = 'none';
@@ -679,58 +1118,24 @@ function hideOtherForms() {
     document.getElementById('upiForm').style.display = 'none';
     document.getElementById('profileInfo').style.display = 'none';
 }
-
-function generateUPIID() {
-    // Fetch mobile number from profile
-    const mobileNumber = getMobileNumberFromProfile();
-    upiID = `${mobileNumber}@idealbank`;
-    document.getElementById('upi-id').value = upiID;
-    document.querySelector('.upi-form').style.display = 'block'; // Show UPI form
-    document.getElementById('upi-buttons').style.display = 'none'; // Hide UPI buttons
+function openUPI() {
+    transferType = 'UPI';
+    document.getElementById('upiForm').style.display = 'block'; // Show UPI form
+    document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
+    document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
+    document.getElementById('ddForm').style.display = 'none'; // Hide DD form
+    hideUPIButtons();
+    hideOtherForms();
 }
 
-function setUPIIDAndPIN() {
-    pin = document.getElementById('pin').value;
-    if (pin.length === 6) {
-        // Store the UPI ID and PIN securely
-        storeUPIIDAndPIN(upiID, pin);
-        // Send money using UPI
-        sendMoneyUPI();
-    } else {
-        alert('Invalid PIN. Please enter a 6-digit PIN.');
-    }
-}
-function sendMoneyUPI() {
-  const upiIDToSend = document.getElementById('upi-id-send').value;
-  const amount = document.getElementById('amount').value;
-  if (upiIDToSend === upiID && amount > 0) {
-    // Send money using UPI
-    sendMoneyUsingUPI(upiID, amount);
-  } else {
-    alert('Invalid UPI ID or amount.');
-  }
+// Function to go back to the main options
+function backToMain() {
+    document.getElementById('upiIDGeneration').style.display = 'none';
+    document.getElementById('upiSendMoneySection').style.display = 'none';
+    document.getElementById('upiMainButtons').style.display = 'block';
+    document.getElementById('generateUPIButton').disabled = false; // Re-enable the button
 }
 
-// Function to fetch mobile number from profile
-function getMobileNumberFromProfile() {
-  // Implement logic to fetch mobile number from profile
-  return '9876543210'; // Replace with actual implementation
-}
-
-// Function to store UPI ID and PIN securely
-function storeUPIIDAndPIN(upiID, pin) {
-  // Implement logic to store UPI ID and PIN securely
-  console.log(`UPI ID and PIN stored: ${upiID} and ${pin}`);
-}
-
-// Function to send money using UPI
-function sendMoneyUsingUPI(upiID, amount) {
-  // Implement logic to send money using UPI
-  console.log(`Money sent using UPI: ${upiID} and amount ${amount}`);
-}
-function hideUPIButtons() {
-    document.getElementById('upi-buttons').style.display = 'none';
-}
 function openRTGS() {
     alert('RTGS is only available for amounts over 2,00,000.'); // Pop-up alert for RTGS
     transferType = 'RTGS';
@@ -738,10 +1143,15 @@ function openRTGS() {
     document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+   
+
     hideUPIButtons();
 
     resetForm('rtgs'); // Reset RTGS form
 }
+
+
 
 function openNEFT() {
     transferType = 'NEFT';
@@ -749,11 +1159,123 @@ function openNEFT() {
     document.getElementById('neftForm').style.display = 'block'; // Show NEFT form
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+    
     hideUPIButtons();
 
     resetForm('neft'); // Reset NEFT form
 }
+function sendRTGS() {
+    const accountNumber = document.getElementById("accNoRTGS").value;
+    const customerName = document.getElementById("customerNameRTGS").value;
+    const accountType = document.getElementById("accTypeRTGS").value;
+    const particulars = document.getElementById("particularsRTGS").value;
+    const amount = parseFloat(document.getElementById("amountRTGS").value);
+    const errorMessage = document.getElementById("rtgsError");
 
+    if (amount <= 200000) {
+        errorMessage.style.display = "block";
+        return;
+    } else {
+        errorMessage.style.display = "none";
+    }
+
+    const data = {
+        accountNumber,
+        customerName,
+        accountType,
+        particulars,
+        amount,
+        transferType: "RTGS"
+    };
+
+    fetch("http://localhost:3001/transfer/rtgs", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        alert(result.message); // Use result.message to show server response
+        // Optionally clear the form fields
+        document.getElementById("rtgsForm").reset();
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("RTGS Transfer Failed.");
+    });
+}
+function sendNEFT() {
+    const accountNumber = document.getElementById("accNoNEFT").value;
+    const customerName = document.getElementById("customerNameNEFT").value;
+    const accountType = document.getElementById("accTypeNEFT").value;
+    const particulars = document.getElementById("particularsNEFT").value;
+    const amount = parseFloat(document.getElementById("amountNEFT").value);
+
+    if (amount >= 200000) {
+        alert("NEFT allows transfers below 2,00,000 only.");
+        return;
+    }
+
+    const data = {
+        accountNumber,
+        customerName,
+        accountType,
+        particulars,
+        amount,
+        transferType: "NEFT"
+    };
+
+    fetch("http://localhost:3001/transfer/neft", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        alert(result.message); // Use result.message to show server response
+        // Optionally clear the form fields
+        document.getElementById("neftForm").reset();
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("NEFT Transfer Failed.");
+    });
+}
+
+function openBillPayments() {
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('billPaymentsSection').style.display = 'block';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+    
+  
+    // Hide other sections as needed
+}
+document.getElementById('electricityBillButton').addEventListener('click', function() {
+    // Handle electricity bill payment
+});
+
+document.getElementById('waterBillButton').addEventListener('click', function() {
+    // Handle water bill payment
+});
+
+document.getElementById('lpgBillButton').addEventListener('click', function() {
+    // Handle LPG bill payment
+});
+
+document.getElementById('mobileRechargeButton').addEventListener('click', function() {
+    // Handle mobile recharge
+});
 function resetForm(type) {
     if (type === 'rtgs') {
         document.getElementById('accNoRTGS').value = '';
@@ -798,6 +1320,8 @@ function openDD() {
     document.getElementById('ddForm').style.display = 'block'; // Show DD form
     document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
     document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
+    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+    
     hideUPIButtons();
 
 
@@ -833,8 +1357,101 @@ function processDD() {
     // Logic to process DD (e.g., send details to server) can be added here
 }
 
+function openPassbook() {
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'block';
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+
+
+
+}
+function openAccountClosure() {
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'block';
+}
+function closeAccount() {
+    const confirmationDialog = document.getElementById('confirmationDialog');
+    confirmationDialog.style.display = 'block';
+}
+function openFD() {
+    document.getElementById('fdFormContainer').style.display = 'block';
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+
+    // Hide other sections as needed
+}
+function openAccountClosure() {
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'block';
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+
+}
+// Function to open the Loan Management form
+function openLoanManagement() {
+    // Get the Loan Management form container element
+    var loanMgmtFormContainer = document.getElementById("loanMgmtFormContainer");
+
+    // Show the Loan Management form
+    loanMgmtFormContainer.style.display = "block";
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('fdFormContainer').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+
+}
+
+// Function to check previous applied loans
+function checkPreviousLoans() {
+    // TO DO: Implement logic to check previous applied loans
+    console.log("Checking previous applied loans...");
+}
+
+// Function to submit loan application
+function submitLoan() {
+    // Get the loan type, amount, and tenure from the form
+    var loanType = document.getElementById("loanType").value;
+    var amount = document.getElementById("amount").value;
+    var tenure = document.getElementById("tenure").value;
+
+    // TO DO: Implement logic to submit loan application
+    console.log("Submitting loan application...");
+    console.log("Loan Type: " + loanType);
+    console.log("Amount: " + amount);
+    console.log("Tenure: " + tenure);
+}
       
         window.onload = function() {
+            document.getElementById('fdFormContainer').style.display = 'none';
+            const passbookTableContainer = document.getElementById('passbookTableContainer');
+    passbookTableContainer.style.display = 'none';
+    document.getElementById('billPaymentsSection').style.display = 'none';
+    document.getElementById('fundTransferPanel').style.display = 'none';
+    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
+    accountClosureFormContainer.style.display = 'none';
+    loanMgmtFormContainer.style.display = "none";
+
             const username = localStorage.getItem('username');
             if (username) {
                 fetch(`http://localhost:3001/dashboard?username=${username}`)

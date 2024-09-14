@@ -111,7 +111,7 @@ app.post('/register', (req, res) => {
         name, dob, gender, pan, aadhar, accountType,
         jointName, jointDob, jointGender, jointPan, jointAadhar,
         address, email, operationMode, accountTypeDetail,
-        securityQuestion, securityAnswer
+        securityQuestion, securityAnswer,mobile
     } = req.body;
 
     const referenceNumber = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
@@ -149,23 +149,23 @@ app.post('/register', (req, res) => {
                     query = `
                         INSERT INTO customers (
                             name, dob, gender, pan, aadhar, joint_name, joint_dob, joint_gender, joint_pan, joint_aadhar,
-                            account_type, address, email, operation_mode, account_type_detail, reference_number, security_question, security_answer, acc_opening_date
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+                            account_type, address, email, operation_mode, account_type_detail, reference_number, security_question, security_answer, acc_opening_date,mobile_number
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
                     `;
                     values = [
                         name, dob, gender, pan, aadhar, jointName, jointDob, jointGender, jointPan, jointAadhar,
-                        accountType, address, email, operationMode, accountTypeDetail, referenceNumber, securityQuestion, securityAnswer, accOpeningDate
+                        accountType, address, email, operationMode, accountTypeDetail, referenceNumber, securityQuestion, securityAnswer, accOpeningDate,mobile
                     ];
                 } else {
                     query = `
                         INSERT INTO customers (
                             name, dob, gender, pan, aadhar, account_type, address, email, operation_mode, account_type_detail,
-                            reference_number, security_question, security_answer, acc_opening_date
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+                            reference_number, security_question, security_answer, acc_opening_date,mobile_number
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
                     `;
                     values = [
                         name, dob, gender, pan, aadhar, accountType, address, email, operationMode, accountTypeDetail,
-                        referenceNumber, securityQuestion, securityAnswer, accOpeningDate
+                        referenceNumber, securityQuestion, securityAnswer, accOpeningDate,mobile
                     ];
                 }
 
@@ -265,6 +265,81 @@ app.get('/dashboard', (req, res) => {
         } else {
             res.json({ success: false, message: 'User not found' });
         }
+    });
+});
+
+
+// RTGS Transfer
+app.post('/transfer/rtgs', (req, res) => {
+    const { accountNumber, customerName, accountType, particulars, amount } = req.body;
+
+    // Check if amount is valid
+    if (amount <= 200000) {
+        return res.status(400).json({ message: 'Amount must be greater than 2,00,000 for RTGS transfers.' });
+    }
+
+    // Check if account exists and fetch balance
+    const getAccountBalanceQuery = 'SELECT account_id, balance FROM accounts WHERE account_number = ?';
+    db.query(getAccountBalanceQuery, [accountNumber], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Error fetching account balance.' });
+        if (results.length === 0) return res.status(404).json({ message: 'Account not found.' });
+
+        const { account_id, balance } = results[0];
+
+        // Calculate new balance
+        const newBalance = balance - amount;
+        if (newBalance < 0) return res.status(400).json({ message: 'Insufficient funds.' });
+
+        // Perform RTGS transaction
+        const insertTransactionQuery = 'INSERT INTO transactions (account_id, transaction_type, transaction_date, amount, balance_after, description) VALUES (?, ?, NOW(), ?, ?, ?)';
+        db.query(insertTransactionQuery, [account_id, 'RTGS', amount, newBalance, particulars], (err) => {
+            if (err) return res.status(500).json({ message: 'Error processing RTGS transfer.' });
+
+            // Update account balance
+            const updateAccountQuery = 'UPDATE accounts SET balance = ? WHERE account_number = ?';
+            db.query(updateAccountQuery, [newBalance, accountNumber], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating account balance.' });
+
+                res.json({ message: 'RTGS Transfer Successful!' });
+            });
+        });
+    });
+});
+
+// NEFT Transfer
+app.post('/transfer/neft', (req, res) => {
+    const { accountNumber, customerName, accountType, particulars, amount } = req.body;
+
+    // NEFT allows any amount to be transferred less than 2 Lakhs
+    if (amount >= 200000) {
+        return res.status(400).json({ message: 'NEFT allows transfers below 2,00,000 only.' });
+    }
+
+    // Check if account exists and fetch balance
+    const getAccountBalanceQuery = 'SELECT account_id, balance FROM accounts WHERE account_number = ?';
+    db.query(getAccountBalanceQuery, [accountNumber], (err, results) => {
+        if (err) return res.status(500).json({ message: 'Error fetching account balance.' });
+        if (results.length === 0) return res.status(404).json({ message: 'Account not found.' });
+
+        const { account_id, balance } = results[0];
+
+        // Calculate new balance
+        const newBalance = balance - amount;
+        if (newBalance < 0) return res.status(400).json({ message: 'Insufficient funds.' });
+
+        // Perform NEFT transaction
+        const insertTransactionQuery = 'INSERT INTO transactions (account_id, transaction_type, transaction_date, amount, balance_after, description) VALUES (?, ?, NOW(), ?, ?, ?)';
+        db.query(insertTransactionQuery, [account_id, 'NEFT', amount, newBalance, particulars], (err) => {
+            if (err) return res.status(500).json({ message: 'Error processing NEFT transfer.' });
+
+            // Update account balance
+            const updateAccountQuery = 'UPDATE accounts SET balance = ? WHERE account_number = ?';
+            db.query(updateAccountQuery, [newBalance, accountNumber], (err) => {
+                if (err) return res.status(500).json({ message: 'Error updating account balance.' });
+
+                res.json({ message: 'NEFT Transfer Successful!' });
+            });
+        });
     });
 });
 
