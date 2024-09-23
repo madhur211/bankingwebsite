@@ -269,79 +269,314 @@ app.get('/dashboard', (req, res) => {
 });
 
 
-// RTGS Transfer
+// RTGS Transfer Endpoint
 app.post('/transfer/rtgs', (req, res) => {
-    const { accountNumber, customerName, accountType, particulars, amount } = req.body;
+    const { scaccountnumber, destinationAccountNumber, amount } = req.body;
 
-    // Check if amount is valid
-    if (amount <= 200000) {
-        return res.status(400).json({ message: 'Amount must be greater than 2,00,000 for RTGS transfers.' });
+    // Check if amount is valid for RTGS
+    if (amount < 200000) {
+        return res.status(400).json({ message: 'RTGS transfer amount must be above 2 lakhs.' });
     }
 
-    // Check if account exists and fetch balance
-    const getAccountBalanceQuery = 'SELECT account_id, balance FROM accounts WHERE account_number = ?';
-    db.query(getAccountBalanceQuery, [accountNumber], (err, results) => {
-        if (err) return res.status(500).json({ message: 'Error fetching account balance.' });
-        if (results.length === 0) return res.status(404).json({ message: 'Account not found.' });
+    const sourceAccountNumber = scaccountnumber;
 
-        const { account_id, balance } = results[0];
+    db.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction start error' });
+        }
 
-        // Calculate new balance
-        const newBalance = balance - amount;
-        if (newBalance < 0) return res.status(400).json({ message: 'Insufficient funds.' });
+        // Update source account balance
+        const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE account_number = ? AND balance >= ?`;
+        db.query(updateSourceBalance, [amount, sourceAccountNumber, amount], (err, results) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error updating source balance' });
+                });
+            }
+            if (results.affectedRows === 0) {
+                return db.rollback(() => {
+                    res.status(400).json({ message: 'Insufficient funds or invalid source account number.' });
+                });
+            }
 
-        // Perform RTGS transaction
-        const insertTransactionQuery = 'INSERT INTO transactions (account_id, transaction_type, transaction_date, amount, balance_after, description) VALUES (?, ?, NOW(), ?, ?, ?)';
-        db.query(insertTransactionQuery, [account_id, 'RTGS', amount, newBalance, particulars], (err) => {
-            if (err) return res.status(500).json({ message: 'Error processing RTGS transfer.' });
+            // Update destination account balance
+            const updateDestinationBalance = `UPDATE accounts SET balance = balance + ? WHERE account_number = ?`;
+            db.query(updateDestinationBalance, [amount, destinationAccountNumber], (err, results) => {
+                if (err) {
+                    return db.rollback(() => {
+                        res.status(500).json({ message: 'Error updating destination balance' });
+                    });
+                }
+                if (results.affectedRows === 0) {
+                    return db.rollback(() => {
+                        res.status(400).json({ message: 'Invalid destination account number.' });
+                    });
+                }
 
-            // Update account balance
-            const updateAccountQuery = 'UPDATE accounts SET balance = ? WHERE account_number = ?';
-            db.query(updateAccountQuery, [newBalance, accountNumber], (err) => {
-                if (err) return res.status(500).json({ message: 'Error updating account balance.' });
+                // Generate transaction IDs
+                const trxIdSource = `TRX${Math.floor(Math.random() * 100000)}`;
+                const trxIdDestination = `TRX${Math.floor(Math.random() * 100000)}`;
 
-                res.json({ message: 'RTGS Transfer Successful!' });
+                // Insert transaction records
+                const insertTransaction = `
+                    INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                    VALUES 
+                    ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?),
+                    ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?)
+                `;
+                const sourceParticulars = `RTGS Transfer to ${destinationAccountNumber}`;
+                const destinationParticulars = `RTGS Transfer from ${sourceAccountNumber}`;
+
+                db.query(insertTransaction, [
+                    sourceAccountNumber, trxIdSource, -amount, sourceParticulars,
+                    destinationAccountNumber, trxIdDestination, amount, destinationParticulars
+                ], (err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Transaction record insert error' });
+                        });
+                    }
+
+                    // Update sender balance in customers table
+                    const updateCustomersTableSender = `
+                        UPDATE customers
+                        SET balance = balance - ?
+                        WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                    `;
+                    db.query(updateCustomersTableSender, [amount, sourceAccountNumber], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Error updating customers table for sender' });
+                            });
+                        }
+
+                        // Update receiver balance in customers table
+                        const updateCustomersTableReceiver = `
+                            UPDATE customers
+                            SET balance = balance + ?
+                            WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                        `;
+                        db.query(updateCustomersTableReceiver, [amount, destinationAccountNumber], (err) => {
+                            if (err) {
+                                return db.rollback(() => {
+                                    res.status(500).json({ message: 'Error updating customers table for receiver' });
+                                });
+                            }
+
+                            // Fetch the latest source account balance and update balance_after in transactions
+                            const getSourceBalance = `SELECT balance FROM accounts WHERE account_number = ?`;
+                            db.query(getSourceBalance, [sourceAccountNumber], (err, sourceResults) => {
+                                if (err || sourceResults.length === 0) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ message: 'Error fetching source account balance' });
+                                    });
+                                }
+
+                                const latestSourceBalance = sourceResults[0].balance;
+
+                                const updateTransactionTable = `
+                                    UPDATE transactions
+                                    SET balance_after = ?
+                                    WHERE transaction_id = ?
+                                `;
+                                db.query(updateTransactionTable, [latestSourceBalance, trxIdSource], (err) => {
+                                    if (err) {
+                                        return db.rollback(() => {
+                                            res.status(500).json({ message: 'Error updating transactions table' });
+                                        });
+                                    }
+
+                                    // Fetch and update destination account balance for balance_after
+                                    db.query(getSourceBalance, [destinationAccountNumber], (err, destResults) => {
+                                        if (err || destResults.length === 0) {
+                                            return db.rollback(() => {
+                                                res.status(500).json({ message: 'Error fetching destination account balance' });
+                                            });
+                                        }
+
+                                        const latestDestBalance = destResults[0].balance;
+
+                                        db.query(updateTransactionTable, [latestDestBalance, trxIdDestination], (err) => {
+                                            if (err) {
+                                                return db.rollback(() => {
+                                                    res.status(500).json({ message: 'Error updating destination transaction' });
+                                                });
+                                            }
+
+                                            db.commit((err) => {
+                                                if (err) {
+                                                    return db.rollback(() => {
+                                                        res.status(500).json({ message: 'Transaction commit error' });
+                                                    });
+                                                }
+                                                res.json({ message: 'RTGS Transfer Successful!' });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             });
         });
     });
 });
 
-// NEFT Transfer
+// NEFT Transfer Endpoint
 app.post('/transfer/neft', (req, res) => {
-    const { accountNumber, customerName, accountType, particulars, amount } = req.body;
+    const { scaccountnumber, destinationAccountNumber, amount } = req.body;
 
-    // NEFT allows any amount to be transferred less than 2 Lakhs
+    // Check if amount is valid for NEFT
     if (amount >= 200000) {
-        return res.status(400).json({ message: 'NEFT allows transfers below 2,00,000 only.' });
+        return res.status(400).json({ message: 'NEFT transfer amount must be below 2 lakhs.' });
     }
 
-    // Check if account exists and fetch balance
-    const getAccountBalanceQuery = 'SELECT account_id, balance FROM accounts WHERE account_number = ?';
-    db.query(getAccountBalanceQuery, [accountNumber], (err, results) => {
-        if (err) return res.status(500).json({ message: 'Error fetching account balance.' });
-        if (results.length === 0) return res.status(404).json({ message: 'Account not found.' });
+    const sourceAccountNumber = scaccountnumber;
 
-        const { account_id, balance } = results[0];
+    db.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction start error' });
+        }
 
-        // Calculate new balance
-        const newBalance = balance - amount;
-        if (newBalance < 0) return res.status(400).json({ message: 'Insufficient funds.' });
+        // Update source account balance
+        const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE account_number = ? AND balance >= ?`;
+        db.query(updateSourceBalance, [amount, sourceAccountNumber, amount], (err, results) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error updating source balance' });
+                });
+            }
+            if (results.affectedRows === 0) {
+                return db.rollback(() => {
+                    res.status(400).json({ message: 'Insufficient funds or invalid source account number.' });
+                });
+            }
 
-        // Perform NEFT transaction
-        const insertTransactionQuery = 'INSERT INTO transactions (account_id, transaction_type, transaction_date, amount, balance_after, description) VALUES (?, ?, NOW(), ?, ?, ?)';
-        db.query(insertTransactionQuery, [account_id, 'NEFT', amount, newBalance, particulars], (err) => {
-            if (err) return res.status(500).json({ message: 'Error processing NEFT transfer.' });
+            // Update destination account balance
+            const updateDestinationBalance = `UPDATE accounts SET balance = balance + ? WHERE account_number = ?`;
+            db.query(updateDestinationBalance, [amount, destinationAccountNumber], (err, results) => {
+                if (err) {
+                    return db.rollback(() => {
+                        res.status(500).json({ message: 'Error updating destination balance' });
+                    });
+                }
+                if (results.affectedRows === 0) {
+                    return db.rollback(() => {
+                        res.status(400).json({ message: 'Invalid destination account number.' });
+                    });
+                }
 
-            // Update account balance
-            const updateAccountQuery = 'UPDATE accounts SET balance = ? WHERE account_number = ?';
-            db.query(updateAccountQuery, [newBalance, accountNumber], (err) => {
-                if (err) return res.status(500).json({ message: 'Error updating account balance.' });
+                // Generate transaction IDs
+                const trxIdSource = `TRX${Math.floor(Math.random() * 100000)}`;
+                const trxIdDestination = `TRX${Math.floor(Math.random() * 100000)}`;
 
-                res.json({ message: 'NEFT Transfer Successful!' });
+                // Insert transaction records
+                const insertTransaction = `
+                    INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                    VALUES 
+                    ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?),
+                    ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?)
+                `;
+                const sourceParticulars = `NEFT Transfer to ${destinationAccountNumber}`;
+                const destinationParticulars = `NEFT Transfer from ${sourceAccountNumber}`;
+
+                db.query(insertTransaction, [
+                    sourceAccountNumber, trxIdSource, -amount, sourceParticulars,
+                    destinationAccountNumber, trxIdDestination, amount, destinationParticulars
+                ], (err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Transaction record insert error' });
+                        });
+                    }
+
+                    // Update sender balance in customers table
+                    const updateCustomersTableSender = `
+                        UPDATE customers
+                        SET balance = balance - ?
+                        WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                    `;
+                    db.query(updateCustomersTableSender, [amount, sourceAccountNumber], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Error updating customers table for sender' });
+                            });
+                        }
+
+                        // Update receiver balance in customers table
+                        const updateCustomersTableReceiver = `
+                            UPDATE customers
+                            SET balance = balance + ?
+                            WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                        `;
+                        db.query(updateCustomersTableReceiver, [amount, destinationAccountNumber], (err) => {
+                            if (err) {
+                                return db.rollback(() => {
+                                    res.status(500).json({ message: 'Error updating customers table for receiver' });
+                                });
+                            }
+
+                            // Fetch the latest source account balance and update balance_after in transactions
+                            const getSourceBalance = `SELECT balance FROM accounts WHERE account_number = ?`;
+                            db.query(getSourceBalance, [sourceAccountNumber], (err, sourceResults) => {
+                                if (err || sourceResults.length === 0) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ message: 'Error fetching source account balance' });
+                                    });
+                                }
+
+                                const latestSourceBalance = sourceResults[0].balance;
+
+                                const updateTransactionTable = `
+                                    UPDATE transactions
+                                    SET balance_after = ?
+                                    WHERE transaction_id = ?
+                                `;
+                                db.query(updateTransactionTable, [latestSourceBalance, trxIdSource], (err) => {
+                                    if (err) {
+                                        return db.rollback(() => {
+                                            res.status(500).json({ message: 'Error updating transactions table' });
+                                        });
+                                    }
+
+                                    // Fetch and update destination account balance for balance_after
+                                    db.query(getSourceBalance, [destinationAccountNumber], (err, destResults) => {
+                                        if (err || destResults.length === 0) {
+                                            return db.rollback(() => {
+                                                res.status(500).json({ message: 'Error fetching destination account balance' });
+                                            });
+                                        }
+
+                                        const latestDestBalance = destResults[0].balance;
+
+                                        db.query(updateTransactionTable, [latestDestBalance, trxIdDestination], (err) => {
+                                            if (err) {
+                                                return db.rollback(() => {
+                                                    res.status(500).json({ message: 'Error updating destination transaction' });
+                                                });
+                                            }
+
+                                            db.commit((err) => {
+                                                if (err) {
+                                                    return db.rollback(() => {
+                                                        res.status(500).json({ message: 'Transaction commit error' });
+                                                    });
+                                                }
+                                                res.json({ message: 'NEFT Transfer Successful!' });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             });
         });
     });
 });
+
 
 // Start server
 app.listen(port, () => {

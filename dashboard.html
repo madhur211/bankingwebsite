@@ -317,6 +317,20 @@
     color: #d9534f; /* Error text color */
     font-size: 0.9em; /* Slightly smaller font size for errors */
 }
+.rtgs-form button, .neft-form button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.rtgs-form button:active, .neft-form button:active {
+    background-color: #004085; /* Change the background color on click */
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1); /* Remove the shadow on click */
+    transform: translateY(2px); /* Add a slight movement on click */
+}
+
 /* Demand Draft Form Styles */
 .dd-form {
     display: none; /* Hidden initially */
@@ -824,7 +838,7 @@
     </div>
 </div>
 
-
+<!-- RTGS Transfer Form -->
 <div class="transfer-form rtgs-form" id="rtgsForm">
     <label for="accNoRTGS">Account Number</label>
     <input type="text" id="accNoRTGS" placeholder="Enter account number for RTGS">
@@ -846,16 +860,17 @@
 
     <p class="form-info">For RTGS, the amount must be greater than 2,00,000.</p>
 
-    <button onclick="sendRTGS()">Send RTGS</button>
+    <button id="sendRTGSButton" onclick="sendRTGS()">Send RTGS</button>
 
     <!-- Error message for RTGS validation -->
-    <div class="error-message" id="rtgsError">Amount must be greater than 2,00,000 for RTGS transfers.</div>
+    <div class="error-message" id="rtgsError" style="display: none;">Amount must be greater than 2,00,000 for RTGS transfers.</div>
 </div>
 
-<!-- NEFT Transfer Form (Initially hidden) -->
+
+<!-- NEFT Transfer Form -->
 <div class="transfer-form neft-form" id="neftForm">
-    <label for="accNoNEFT">Account Number</label>
-    <input type="text" id="accNoNEFT" placeholder="Enter account number for NEFT">
+    <label for="destAccNoNEFT">Account Number</label>
+    <input type="text" id="destAccNoNEFT" placeholder="Enter account number for NEFT">
 
     <label for="customerNameNEFT">Customer Name</label>
     <input type="text" id="customerNameNEFT" placeholder="Enter customer name">
@@ -872,9 +887,12 @@
     <label for="amountNEFT">Amount</label>
     <input type="number" id="amountNEFT" placeholder="Enter amount">
 
-    <p class="form-info">NEFT allows any amount to be transferred less then 2 Lakhs.</p>
+    <p class="form-info">NEFT allows any amount to be transferred less than 2 Lakhs.</p>
 
-    <button onclick="sendNEFT()">Send NEFT</button>
+    <button id="sendNEFTButton" onclick="sendNEFT()">Send NEFT</button>
+
+    <!-- Error message for NEFT validation -->
+    <div class="error-message" id="neftError" style="display: none;">Amount must be less than 2,00,000 for NEFT transfers.</div>
 </div>
 <!-- Demand Draft Form (Initially hidden) -->
 <div class="transfer-form dd-form" id="ddForm">
@@ -1165,87 +1183,93 @@ function openNEFT() {
 
     resetForm('neft'); // Reset NEFT form
 }
+
+// Function to send RTGS request
 function sendRTGS() {
-    const accountNumber = document.getElementById("accNoRTGS").value;
-    const customerName = document.getElementById("customerNameRTGS").value;
-    const accountType = document.getElementById("accTypeRTGS").value;
-    const particulars = document.getElementById("particularsRTGS").value;
-    const amount = parseFloat(document.getElementById("amountRTGS").value);
-    const errorMessage = document.getElementById("rtgsError");
+    const username = localStorage.getItem('username');
+    const button = document.getElementById('sendRTGSButton');
+    button.disabled = true; // Disable button
 
-    if (amount <= 200000) {
-        errorMessage.style.display = "block";
-        return;
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    const scaccountnumber = user.account_number;
+                    const destinationAccountNumber = document.getElementById("accNoRTGS").value;
+                    const amount = parseFloat(document.getElementById("amountRTGS").value);
+
+                    // Validate amount for RTGS
+                    if (amount < 200000) {
+                        document.getElementById("rtgsError").style.display = "block";
+                        return;
+                    }
+                    document.getElementById("rtgsError").style.display = "none";
+
+                    // Send RTGS request to the server
+                    fetch('http://localhost:3001/transfer/rtgs', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ scaccountnumber, destinationAccountNumber, amount })
+                    })
+                    .then(response => response.json())
+                    .then(data => alert(data.message))
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    console.log('Error fetching profile data:', data.error);
+                }
+            });
     } else {
-        errorMessage.style.display = "none";
+        console.log('No username found in localStorage.');
+        button.disabled = false; // Enable button
     }
-
-    const data = {
-        accountNumber,
-        customerName,
-        accountType,
-        particulars,
-        amount,
-        transferType: "RTGS"
-    };
-
-    fetch("http://localhost:3001/transfer/rtgs", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        alert(result.message); // Use result.message to show server response
-        // Optionally clear the form fields
-        document.getElementById("rtgsForm").reset();
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("RTGS Transfer Failed.");
-    });
 }
+
+// Function to send NEFT request
 function sendNEFT() {
-    const accountNumber = document.getElementById("accNoNEFT").value;
-    const customerName = document.getElementById("customerNameNEFT").value;
-    const accountType = document.getElementById("accTypeNEFT").value;
-    const particulars = document.getElementById("particularsNEFT").value;
-    const amount = parseFloat(document.getElementById("amountNEFT").value);
+    const username = localStorage.getItem('username');
+    const button = document.getElementById('sendNEFTButton');
+    button.disabled = true; // Disable button
 
-    if (amount >= 200000) {
-        alert("NEFT allows transfers below 2,00,000 only.");
-        return;
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    const scaccountnumber = user.account_number;
+                    const destinationAccountNumber = document.getElementById("destAccNoNEFT").value;
+                    const amount = parseFloat(document.getElementById("amountNEFT").value);
+
+                    // Validate amount for NEFT
+                    if (amount >= 200000) {
+                        document.getElementById("neftError").style.display = "block";
+                        return;
+                    }
+                    document.getElementById("neftError").style.display = "none";
+
+                    // Send NEFT request to the server
+                    fetch('http://localhost:3001/transfer/neft', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ scaccountnumber, destinationAccountNumber, amount })
+                    })
+                    .then(response => response.json())
+                    .then(data => alert(data.message))
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    console.log('Error fetching profile data:', data.error);
+                }
+            });
+    } else {
+        console.log('No username found in localStorage.');
+        button.disabled = false; // Enable button
+
     }
-
-    const data = {
-        accountNumber,
-        customerName,
-        accountType,
-        particulars,
-        amount,
-        transferType: "NEFT"
-    };
-
-    fetch("http://localhost:3001/transfer/neft", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        alert(result.message); // Use result.message to show server response
-        // Optionally clear the form fields
-        document.getElementById("neftForm").reset();
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("NEFT Transfer Failed.");
-    });
 }
+
+
 
 function openBillPayments() {
     document.getElementById('fundTransferPanel').style.display = 'none';
@@ -1293,23 +1317,8 @@ function resetForm(type) {
     }
 }
 
-function sendMoneyRTGS() {
-    const amount = parseFloat(document.getElementById('amountRTGS').value);
-    const rtgsError = document.getElementById('rtgsError');
 
-    if (transferType === 'RTGS' && amount <= 200000) {
-        rtgsError.style.display = 'block'; // Show error message for RTGS
-    } else {
-        rtgsError.style.display = 'none'; // Hide error message if conditions are met
-        alert(`Sending ${transferType} transfer...`);
-        // Here you can add the logic to process the transfer
-    }
-}
 
-function sendMoneyNEFT() {
-    alert(`Sending NEFT transfer...`);
-    // Logic to process NEFT transfer
-}
 
 
 // Placeholder functions for other transfer types
