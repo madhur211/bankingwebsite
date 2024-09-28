@@ -10,16 +10,19 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
+            margin-top: 10vh;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 75vh;
             background-color: #e9ecef;
             text-align: center;
         }
 
         .container {
+            flex-grow: 1;
             background-color: #f8f9fa;
             padding: 30px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
@@ -109,10 +112,16 @@
         }
 
         .footer {
-            margin-top: 20px;
-            color: #6c757d;
-            font-size: 12px;
-        }
+  background-color: #004085;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  margin: 0; /* Add this property */
+}
     </style>
 </head>
 

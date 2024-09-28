@@ -578,6 +578,149 @@ app.post('/transfer/neft', (req, res) => {
 });
 
 
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path1 = require('path');
+
+app.post('/transfer/dd', (req, res) => {
+    const { payeeName, amount, charges, totalAmount, referenceNumber, sourceAccountNumber } = req.body;
+
+    db.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction start error' });
+        }
+
+        // Update the balance of the source account
+        const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE account_number = ? AND balance >= ?`;
+        db.query(updateSourceBalance, [totalAmount, sourceAccountNumber, totalAmount], (err, results) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error updating source balance' });
+                });
+            }
+            if (results.affectedRows === 0) {
+                return db.rollback(() => {
+                    res.status(400).json({ message: 'Insufficient funds or invalid account.' });
+                });
+            }
+
+            // Insert into DD table with created_at instead of date
+            const insertDD = `INSERT INTO dd (reference_number, payee_name, amount, charges, total_amount, created_at) VALUES (?, ?, ?, ?, ?, NOW())`;
+            db.query(insertDD, [referenceNumber, payeeName, amount, charges, totalAmount], (err) => {
+                if (err) {
+                    console.error('Error inserting into DD table:', err);
+                    return db.rollback(() => {
+                        res.status(500).json({ message: 'Error inserting into DD table', error: err });
+                    });
+                }
+
+                // Generate transaction ID
+                const trxIdSource = `TRX${Math.floor(Math.random() * 100000)}`;
+
+                // Insert transaction record
+                const insertTransaction = `
+                    INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars,dd_reference_number)
+                    VALUES 
+                    ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?, ?)
+                `;
+                const sourceParticulars = `Demand Draft issued to ${payeeName}`;
+
+                db.query(insertTransaction, [sourceAccountNumber, trxIdSource, -totalAmount, sourceParticulars, referenceNumber], (err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Transaction record insert error' });
+                        });
+                    }
+
+                    // Update balance in the customers table
+                    const updateCustomerBalance = `
+                        UPDATE customers
+                        SET balance = balance - ?
+                        WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                    `;
+                    db.query(updateCustomerBalance, [totalAmount, sourceAccountNumber], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Error updating customer balance' });
+                            });
+                        }
+
+                        // Fetch the updated balance and update the transaction record
+                        const getSourceBalance = `SELECT balance FROM accounts WHERE account_number = ?`;
+                        db.query(getSourceBalance, [sourceAccountNumber], (err, sourceResults) => {
+                            if (err || sourceResults.length === 0) {
+                                return db.rollback(() => {
+                                    res.status(500).json({ message: 'Error fetching source account balance' });
+                                });
+                            }
+
+                            const latestSourceBalance = sourceResults[0].balance;
+
+                            const updateTransaction = `UPDATE transactions SET balance_after = ? WHERE transaction_id = ?`;
+                            db.query(updateTransaction, [latestSourceBalance, trxIdSource], (err) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ message: 'Error updating transactions' });
+                                    });
+                                }
+
+                              
+                                // Use the desktop path for saving the PDF
+                                const desktopPath = path1.join(process.env.HOME || process.env.USERPROFILE, 'Desktop/Madhur');
+                                
+                                // Create the directory if it doesn't exist
+                                if (!fs.existsSync(desktopPath)) {
+                                    fs.mkdirSync(desktopPath, { recursive: true });
+                                }
+
+                                const pdfPath = path1.join(desktopPath, `${referenceNumber}.pdf`); // Define your path to save the PDF
+
+                                // Create a new PDF document
+                                const pdfDoc = new PDFDocument();
+
+                                // Create PDF content
+                                pdfDoc.pipe(fs.createWriteStream(pdfPath));
+                                pdfDoc.fontSize(25).text('Demand Draft', { align: 'center' });
+                                pdfDoc.moveDown();
+                                pdfDoc.fontSize(12).text(`Reference Number: ${referenceNumber}`);
+                                pdfDoc.text(`Payee Name: ${payeeName}`);
+                                pdfDoc.text(`Amount: ₹${amount}`);
+                                pdfDoc.text(`Charges: ₹${charges}`);
+                                pdfDoc.text(`Total Amount: ₹${totalAmount}`);
+                                pdfDoc.text(`Source Account Number: ${sourceAccountNumber}`);
+                                pdfDoc.text(`Date: ${new Date().toLocaleDateString()}`);
+                                pdfDoc.end();
+                                   // Send success response and check for further issues
+                                   res.json({
+                                    message: `Demand Draft Transfer Successful! Reference Number: ${referenceNumber}. Your Demand Draft has been successfully processed. Please collect it from the branch.`,
+                                    referenceNumber: referenceNumber,
+                                    collectMessage: `Your Demand Draft with reference number ${referenceNumber} has been successfully processed. Please collect it from the branch.`,
+                                    pdfPath: pdfPath // You can send back the path of the saved PDF
+                                });
+
+ // Debugging after response
+ console.log("Demand Draft transfer success response sent!");
+                                db.commit((err) => {
+                                    if (err) {
+                                        console.error('Error during commit:', err); // Log commit error
+                                        return db.rollback(() => {
+                                            res.status(500).json({ message: 'Commit error' });
+                                        });
+                                    }
+                                    console.log('Demand Draft Transfer Successful!'); // Log success
+                                
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
+
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

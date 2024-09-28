@@ -53,7 +53,7 @@
             background-color: #004085;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 6.5px;
             border-radius: 5px;
             cursor: pointer;
             margin: 5px;
@@ -353,6 +353,27 @@
     color: #555;
     margin-top: 10px;
 }
+.dd-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.dd-button:hover {
+    background-color: #0056b3;
+}
+
+.dd-button:disabled {
+    background-color: #c0c0c0;
+    cursor: not-allowed;
+}
+
+
 .bill-payments {
     background-color: #ffffff;
     padding: 20px;
@@ -623,7 +644,36 @@
 .loan-mgmt-form button:hover {
     background-color:#0056b3;
 }
+.modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header class="header">
@@ -902,23 +952,29 @@
 
     <label for="ddAmount">Amount</label>
     <input type="number" id="ddAmount" placeholder="Enter amount">
-
-    <p class="form-info">Charges as per applicable:<b>dd is not for less than Rs10,000</b>
+    
+    <p class="form-info">Charges as per applicable:
         <br>Amounts between Rs 10,000 and Rs 20,000: Rs 100
         <br>Amounts between Rs 20,000 and Rs 50,000: Rs 200
         <br> Amounts between Rs 50,000 and Rs 1,00,000: Rs 300
         <br> Amounts between Rs 1,00,000 and Rs 2,00,000: Rs 500
         <br> Amounts above Rs 2,00,000: Rs 700
     </p>
+    <P><b>dd is not for less than Rs10,000</b></P>
 
-    <button onclick="processDD()">Proceed</button>
+    <p><b>Note:After transaction successful message visit branch ,give your account number/or show downloaded dd pdf  and collect reciept without queue </b></p>
 
-    <!-- Random reference number and message -->
-    <div id="ddResult" style="display: none;">
-        <p id="referenceNumber"></p>
-        <p>Visit the nearest branch to collect your Demand Draft. No queue is required.</p>
+    <button id="processDDButton" class="dd-button" onclick="processDD()">Proceed</button>
+     <!-- Modal -->
+<div id="ddModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Success!</h2>
+        <p>Your Demand Draft has been successfully processed!</p>
+        <p><strong>Reference Number:</strong> <span id="modalReferenceNumber"></span></p>
+        <p>Visit the nearest branch with this reference number to collect your Demand Draft without standing in a queue.</p>
     </div>
-
+</div>
 
 </div>
 </div>
@@ -1344,27 +1400,108 @@ function resetForm(type) {
     }
 }
 
-function processDD() {
+async function processDD() {
+    const username = localStorage.getItem('username');
     const payeeName = document.getElementById('payeeName').value;
     const amount = parseFloat(document.getElementById('ddAmount').value);
-    const ddResult = document.getElementById('ddResult');
+    
+    const button = document.getElementById('processDDButton');
     const referenceNumber = Math.floor(Math.random() * 1000000000); // Random 9-digit number
+  
 
+    // Disable button after click to avoid multiple submissions
+    button.disabled = true;
+
+    // Validation
     if (!payeeName || isNaN(amount) || amount <= 0) {
         alert('Please fill in all fields correctly.');
+        button.disabled = false; // Re-enable the button
         return;
     }
 
-    let charges = 0;
-    if (amount > 10000) {
-        charges = 100; // Fixed charge
+    if (username) {
+        try {
+            // Fetch user account details using the username
+            const userResponse = await fetch(`http://localhost:3001/dashboard?username=${username}`);
+            const userData = await userResponse.json();
+
+            if (userData.success) {
+                const user = userData.user;
+                const sourceAccountNumber = user.account_number;  // Extract the source account number from user data
+
+                let charges = 0;
+                // Charge calculation logic
+                if (amount < 10000) {
+                    alert('Demand Draft amount must be at least Rs 10,000.');
+                    button.disabled = false;
+                    return;
+                } else if (amount <= 20000) {
+                    charges = 100;
+                } else if (amount <= 50000) {
+                    charges = 200;
+                } else if (amount <= 100000) {
+                    charges = 300;
+                } else if (amount <= 200000) {
+                    charges = 500;
+                } else {
+                    charges = 700;
+                }
+
+                const totalAmount = amount + charges;
+
+                // Proceed with the DD transfer
+                const ddResponse = await fetch('http://localhost:3001/transfer/dd', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payeeName, amount, charges, totalAmount, referenceNumber, sourceAccountNumber })
+                });
+                const ddData = await ddResponse.json();
+
+                if (ddData.success) {
+                     // Check if the element exists before setting the content
+                     const referenceNumberElement = document.getElementById('referenceNumber');
+                    if (referenceNumberElement) {
+                        referenceNumberElement.textContent = `Reference Number: ${referenceNumber}`;
+                    } else {
+                        console.warn('Reference number element not found!');
+                    }
+                    
+                    // Show the modal
+                    document.getElementById('modalReferenceNumber').textContent = referenceNumber;
+                    document.getElementById('ddModal').style.display = 'block'; // Show modal
+                    
+                } else {
+                    alert(`Error: ${ddData.message}`);  // Display detailed error message
+                    console.error('Backend error:', ddData.error);  // Log the actual error
+                }
+            } else {
+                alert('Error fetching user data.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            button.disabled = false;  // Always re-enable the button after processing
+        }
     }
-
-    ddResult.style.display = 'block'; // Show result
-    document.getElementById('referenceNumber').textContent = `Reference Number: ${referenceNumber}`;
-
-    // Logic to process DD (e.g., send details to server) can be added here
 }
+function closeModal() {
+    document.getElementById('ddModal').style.display = 'none';
+}
+
+// Function to generate PDF
+/*function generatePDF(referenceNumber, amount, payeeName) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const today = new Date().toLocaleDateString();
+
+    doc.text('Demand Draft Details', 10, 10);
+    doc.text(`Reference Number: ${referenceNumber}`, 10, 20);
+    doc.text(`Amount: Rs ${amount}`, 10, 30);
+    doc.text(`Payee Name: ${payeeName}`, 10, 40);
+    doc.text(`Date: ${today}`, 10, 50);
+
+    doc.save(`Demand_Draft_${referenceNumber}.pdf`);
+}*/
 
 function openPassbook() {
     const passbookTableContainer = document.getElementById('passbookTableContainer');
