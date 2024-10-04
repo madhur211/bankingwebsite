@@ -884,7 +884,70 @@ app.post('/transfer/imps', (req, res) => {
         });
     });
 });
+// Route to fetch transactions for a customer
+app.get('/transactions', (req, res) => {
+    const customerId = req.query.customer_id;
 
+    const query = `
+        SELECT 
+            t.transaction_id,
+            t.date,
+            t.particulars,
+            t.amount,
+            t.balance_after
+        FROM 
+            transactions t
+        WHERE 
+            t.customer_id = ?
+    `;
+    db.query(query, [customerId], (err, results) => {
+        if (err) {
+            console.error('Error fetching transactions:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching transactions' });
+        }
+
+        res.json({ success: true, transactions: results });
+    });
+});
+// Route to fetch transactions for generating a statement within a date range
+app.get('/generateStatement', (req, res) => {
+    const customerId = req.query.customer_id;
+    const startDate = req.query.startDate;  // Optional start date
+    const endDate = req.query.endDate;      // Optional end date
+
+    let query = `
+        SELECT 
+            t.transaction_id,
+            t.date,
+            t.particulars,
+            t.amount,
+            t.balance_after
+        FROM 
+            transactions t
+        WHERE 
+            t.customer_id = ?
+    `;
+
+    const queryParams = [customerId];
+
+    // Check if startDate and endDate are provided, and adjust the query accordingly
+    if (startDate && endDate) {
+        query += ` AND t.date >= ? AND t.date <= ?`;
+        queryParams.push(startDate, endDate);  // Add dates to query params
+    }
+
+    // Order by date for better readability
+    query += ` ORDER BY t.date`;
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error('Error generating statement:', err);
+            return res.status(500).json({ success: false, error: 'Error generating statement' });
+        }
+
+        res.json({ success: true, transactions: results });
+    });
+});
 
 // Start server
 app.listen(port, () => {
