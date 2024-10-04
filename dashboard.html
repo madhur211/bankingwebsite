@@ -372,6 +372,85 @@
     background-color: #c0c0c0;
     cursor: not-allowed;
 }
+/* IMPS Form Specific Styles */
+.imps-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+}
+
+.imps-form h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.imps-form table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.imps-form th {
+    text-align: left;
+    padding: 10px 0;
+    font-weight: normal;
+    color: #555;
+}
+
+.imps-form td {
+    padding: 10px 0;
+}
+
+.imps-form input[type="text"],
+.imps-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.imps-form .form-info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.imps-form #sendImpsButton {
+    background-color:#0056b3 ;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.imps-form #sendImpsButton:hover {
+    background-color: #45a049;
+}
+
+.imps-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Additional media queries for responsiveness */
+@media (max-width: 768px) {
+    .imps-form {
+        max-width: 100%;
+        padding: 15px;
+    }
+}
 
 
 .bill-payments {
@@ -852,7 +931,7 @@
   <div class="fund-transfer" id="fundTransferPanel">
     <h2>Fund Transfer Options</h2>
     <div class="fund-transfer-options">
-        <button id="upiButton" onclick="openUPI()">UPI</button>
+        <button id="impsButton" onclick="openImps()">IMPS(MOBILE)</button>
         <button id="rtgsButton" onclick="openRTGS()">RTGS (More than 2 Lakhs)</button>
         <button id="neftButton" onclick="openNEFT()">NEFT</button>
         <button id="ddButton" onclick="openDD()">Demand Draft (DD)</button>
@@ -860,33 +939,28 @@
     </div>
    <!-- Transfer Form (Initially hidden) -->
   
-   <!-- UPI ID Generation and Send Money Section -->
-<div class="transfer-form upi-form" id="upiForm">
-    <h2>UPI ID Generation and Send Money</h2>
 
-    <!-- Main Buttons -->
-    <div id="upiMainButtons">
-        <button onclick="showUPIGeneration()">Generate UPI ID</button>
-        <button onclick="showSendMoney()">Send Money</button>
-    </div>
 
-   
-    <!-- Send Money Section -->
-    <div id="upiSendMoneySection" style="display: none; margin-top: 20px;">
-        <h3>Send Money via UPI</h3>
-        <label for="upiIDSend">UPI ID:</label>
-        <input type="text" id="upiIDSend" readonly>
+  <!-- IMPS Transfer Form -->
+  <div class="imps-form" id="impsForm">
+      <h2>IMPS Transfer Form</h2>
+      <table>
+          <tr>
+              <th>Mobile Number</th>
+              <td><input type="text" id="mobileNumberImps" placeholder="Enter mobile number for IMPS"></td>
+          </tr>
+          <tr>
+              <th>Amount</th>
+              <td><input type="number" id="amountImps" placeholder="Enter amount"></td>
+          </tr>
+      </table>
+      <p class="form-info">For IMPS, the amount must be greater than 0.</p>
 
-        <label for="amountSend">Amount:</label>
-        <input type="number" id="amountSend" placeholder="Enter Amount">
+      <button id="sendImpsButton" onclick="sendImps()">Send IMPS</button>
 
-        <label for="pinSend">PIN:</label>
-        <input type="password" id="pinSend" placeholder="Enter UPI PIN">
-
-        <button onclick="confirmSendMoney()">Send Money</button>
-        <button onclick="backToMain()">Back</button>
-    </div>
-</div>
+      <!-- Error message for IMPS validation -->
+      <div class="error-message" id="impsError" style="display: none;">Amount must be greater than 0 for IMPS transfers.</div>
+  </div>
 
 <!-- RTGS Transfer Form -->
 <div class="transfer-form rtgs-form" id="rtgsForm">
@@ -1182,6 +1256,7 @@ function openFundTransfers() {
     document.getElementById('fdFormContainer').style.display = 'none';
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
+    document.getElementById('impsForm').style.display = 'none';
 
 }
 
@@ -1189,17 +1264,8 @@ function hideOtherForms() {
     document.getElementById('rtgsForm').style.display = 'none';
     document.getElementById('neftForm').style.display = 'none';
     document.getElementById('ddForm').style.display = 'none';
-    document.getElementById('upiForm').style.display = 'none';
+    document.getElementById('impsForm').style.display = 'none';
     document.getElementById('profileInfo').style.display = 'none';
-}
-function openUPI() {
-    transferType = 'UPI';
-    document.getElementById('upiForm').style.display = 'block'; // Show UPI form
-    document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
-    document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
-    document.getElementById('ddForm').style.display = 'none'; // Hide DD form
-    hideUPIButtons();
-    hideOtherForms();
 }
 
 // Function to go back to the main options
@@ -1217,7 +1283,7 @@ function openRTGS() {
     document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
-    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+    document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
    
 
     hideUPIButtons();
@@ -1233,7 +1299,7 @@ function openNEFT() {
     document.getElementById('neftForm').style.display = 'block'; // Show NEFT form
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
-    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+    document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
     
     hideUPIButtons();
 
@@ -1325,6 +1391,85 @@ function sendNEFT() {
     }
 }
 
+// Open the IMPS Transfer form
+function openImps() {
+    // Set the transfer type to IMPS
+    const transferType = 'IMPS';
+    
+    // Show the IMPS form and hide other forms if necessary
+    document.getElementById('impsForm').style.display = 'block'; // Show IMPS form
+    document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
+    document.getElementById('neftForm').style.display = 'none'; // Show NEFT form
+    document.getElementById('ddForm').style.display = 'none'; // Hide DD form
+    document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+
+
+    
+    // Reset the IMPS form
+    resetForm('imps');
+}
+
+// Reset the form fields
+function resetForm(type) {
+    if (type === 'imps') {
+        document.getElementById('mobileNumberImps').value = '';  // Reset mobile number field
+        document.getElementById('amountImps').value = '';  // Reset amount field
+        document.getElementById('impsError').style.display = 'none'; // Hide error message
+    }
+}
+
+// Function to send IMPS request
+function sendImps() {
+    const button = document.getElementById('sendImpsButton');
+    button.disabled = true; // Disable the button to prevent multiple clicks
+
+    // Retrieve the username from localStorage (or another method of user session management)
+    const username = localStorage.getItem('username');
+
+    if (username) {
+        // Fetch user profile to get source account number
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    const scaccountnumber = user.account_number;  // Get source account number
+                    const mobileNumber = document.getElementById("mobileNumberImps").value;  // Get mobile number from form
+                    const amount = parseFloat(document.getElementById("amountImps").value);  // Get amount from form
+
+                    // Validate amount for IMPS
+                    if (amount <= 0) {
+                        document.getElementById("impsError").style.display = "block";  // Show error if amount is invalid
+                        button.disabled = false;  // Re-enable button
+                        return;
+                    }
+                    document.getElementById("impsError").style.display = "none";  // Hide error message
+
+                    // Send IMPS request to the backend
+                    fetch('http://localhost:3001/transfer/imps', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ scaccountnumber, mobileNumber, amount })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);  // Show success message
+                        button.disabled = false;  // Re-enable the button
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        button.disabled = false;  // Re-enable the button on error
+                    });
+                } else {
+                    console.log('Error fetching profile data:', data.error);
+                    button.disabled = false;  // Re-enable the button
+                }
+            });
+    } else {
+        console.log('No username found in localStorage.');
+        button.disabled = false;  // Re-enable the button
+    }
+}
 
 
 function openBillPayments() {
@@ -1385,7 +1530,7 @@ function openDD() {
     document.getElementById('ddForm').style.display = 'block'; // Show DD form
     document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
     document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
-    document.getElementById('upiForm').style.display = 'none'; // Hide UPI form
+    document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
     
     hideUPIButtons();
 

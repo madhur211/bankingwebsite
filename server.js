@@ -719,6 +719,171 @@ app.post('/transfer/dd', (req, res) => {
     });
 });
 
+// IMPS Transfer Endpoint
+app.post('/transfer/imps', (req, res) => {
+    const { scaccountnumber, mobileNumber, amount } = req.body;
+
+    // Check if amount is valid for IMPS
+    if (amount <= 0) {
+        return res.status(400).json({ message: 'IMPS transfer amount must be greater than 0.' });
+    }
+
+    const sourceAccountNumber = scaccountnumber;
+
+    db.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction start error' });
+        }
+
+        // Update source account balance
+        const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE account_number = ? AND balance >= ?`;
+        db.query(updateSourceBalance, [amount, sourceAccountNumber, amount], (err, results) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error updating source balance' });
+                });
+            }
+            if (results.affectedRows === 0) {
+                return db.rollback(() => {
+                    res.status(400).json({ message: 'Insufficient funds or invalid source account number.' });
+                });
+            }
+
+            // Get destination account details using mobile number
+            const getDestinationAccount = `SELECT account_number FROM customers WHERE mobile_number = ?`;
+            db.query(getDestinationAccount, [mobileNumber], (err, destinationResults) => {
+                if (err || destinationResults.length === 0) {
+                    return db.rollback(() => {
+                        res.status(400).json({ message: 'Invalid destination mobile number.' });
+                    });
+                }
+
+                const destinationAccountNumber = destinationResults[0].account_number;
+
+                // Update destination account balance
+                const updateDestinationBalance = `UPDATE accounts SET balance = balance + ? WHERE account_number = ?`;
+                db.query(updateDestinationBalance, [amount, destinationAccountNumber], (err, results) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Error updating destination balance' });
+                        });
+                    }
+                    if (results.affectedRows === 0) {
+                        return db.rollback(() => {
+                            res.status(400).json({ message: 'Invalid destination account number.' });
+                        });
+                    }
+
+                    // Generate transaction IDs
+                    const trxIdSource = `TRX${Math.floor(Math.random() * 100000)}`;
+                    const trxIdDestination = `TRX${Math.floor(Math.random() * 100000)}`;
+
+                    // Insert transaction records for both accounts
+                    const insertTransaction = `
+                        INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                        VALUES 
+                        ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?),
+                        ((SELECT customer_id FROM accounts WHERE account_number = ?), ?, ?, NOW(), ?)
+                    `;
+                    const sourceParticulars = `IMPS Transfer to ${mobileNumber}`;
+                    const destinationParticulars = `IMPS Transfer from ${sourceAccountNumber}`;
+
+                    db.query(insertTransaction, [
+                        sourceAccountNumber, trxIdSource, -amount, sourceParticulars,
+                        destinationAccountNumber, trxIdDestination, amount, destinationParticulars
+                    ], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Transaction record insert error' });
+                            });
+                        }
+
+                        // Update sender's balance in customers table
+                        const updateCustomersTableSender = `
+                            UPDATE customers
+                            SET balance = balance - ?
+                            WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                        `;
+                        db.query(updateCustomersTableSender, [amount, sourceAccountNumber], (err) => {
+                            if (err) {
+                                return db.rollback(() => {
+                                    res.status(500).json({ message: 'Error updating customers table for sender' });
+                                });
+                            }
+
+                            // Update receiver's balance in customers table
+                            const updateCustomersTableReceiver = `
+                                UPDATE customers
+                                SET balance = balance + ?
+                                WHERE customer_id = (SELECT customer_id FROM accounts WHERE account_number = ?)
+                            `;
+                            db.query(updateCustomersTableReceiver, [amount, destinationAccountNumber], (err) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ message: 'Error updating customers table for receiver' });
+                                    });
+                                }
+
+                                // Fetch the latest source account balance and update balance_after in transactions
+                                const getSourceBalance = `SELECT balance FROM accounts WHERE account_number = ?`;
+                                db.query(getSourceBalance, [sourceAccountNumber], (err, sourceResults) => {
+                                    if (err || sourceResults.length === 0) {
+                                        return db.rollback(() => {
+                                            res.status(500).json({ message: 'Error fetching source account balance' });
+                                        });
+                                    }
+
+                                    const latestSourceBalance = sourceResults[0].balance;
+
+                                    const updateTransactionTable = `
+                                        UPDATE transactions
+                                        SET balance_after = ?
+                                        WHERE transaction_id = ?
+                                    `;
+                                    db.query(updateTransactionTable, [latestSourceBalance, trxIdSource], (err) => {
+                                        if (err) {
+                                            return db.rollback(() => {
+                                                res.status(500).json({ message: 'Error updating transactions table' });
+                                            });
+                                        }
+
+                                        // Fetch and update destination account balance for balance_after
+                                        db.query(getSourceBalance, [destinationAccountNumber], (err, destResults) => {
+                                            if (err || destResults.length === 0) {
+                                                return db.rollback(() => {
+                                                    res.status(500).json({ message: 'Error fetching destination account balance' });
+                                                });
+                                            }
+
+                                            const latestDestBalance = destResults[0].balance;
+
+                                            db.query(updateTransactionTable, [latestDestBalance, trxIdDestination], (err) => {
+                                                if (err) {
+                                                    return db.rollback(() => {
+                                                        res.status(500).json({ message: 'Error updating destination transaction' });
+                                                    });
+                                                }
+
+                                                db.commit((err) => {
+                                                    if (err) {
+                                                        return db.rollback(() => {
+                                                            res.status(500).json({ message: 'Transaction commit error' });
+                                                        });
+                                                    }
+                                                    res.json({ message: 'IMPS Transfer Successful!' });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
 
 
 // Start server
