@@ -90,17 +90,19 @@
                 transform: translateX(-100%);
             }
         }
-        .container {
+        .profilecontainer {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            margin-top: -20px; /* Adjusted margin for the header */
+            padding: 10px;
+            margin-top: -10px; /* Adjusted margin for the header */
+            padding-top: 0px; /* Optional: Adjust if necessary to shift upwards */
+            
         }
         .profile-info {
             background-color: #ffffff;
-            padding: 20px;
-            margin: 20px;
+            padding: 15px;
+            margin: 10px 0;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
@@ -110,12 +112,17 @@
         }
         .profile-info h1 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
+            margin-top: -10px; /* Optional: Ensure the title is closer to the top */
+            text-align: center; /* Center align the title */
+
         }
         .profile-tables {
             display: flex;
             justify-content: space-between;
             overflow-x: auto;
+            overflow-x: auto;
+            margin-top: 10px; /* Add some space below the title and above tables */
         }
         .profile-tables .table-container {
             width: 45%;
@@ -631,16 +638,25 @@
     max-width: 800px;
     margin: auto; /* Center the panel */
 }
-.fd-form {
+/* Container for FD form and Previous FDs */
+.fd-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the form and previous FDs */
+    max-width: 1200px; /* Limit the total width */
+    margin: 40px auto;
+}
+
+.fd-form, #previousFDsContainer {
+    flex: 1; /* Take up equal space */
     background-color: #f7f7f7;
     padding: 30px;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 40px auto; /* Center the panel */
 }
 
+/* FD Form Styling */
 .fd-form h2 {
     font-size: 20px;
     margin-bottom: 20px;
@@ -655,7 +671,22 @@
     color: #666;
 }
 
-.fd-form select, .fd-form input[type="number"] {
+.fd-form input[type="text"], .fd-form input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.fd-form input[type="text"]:focus, 
+.fd-form input[type="number"]:focus,
+.fd-form select:focus {
+    border-color: #0056b3;
+    outline: none;
+}
+
+.fd-form select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -664,7 +695,7 @@
 }
 
 .fd-form button {
-    background-color:#0056b3;
+    background-color: #0056b3;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -675,54 +706,190 @@
 }
 
 .fd-form button:hover {
-    background-color:#0056b3;
-}
-.loan-mgmt-form {
-    background-color: #f7f7f7;
-    padding: 30px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 40px auto; /* Center the panel */
+    background-color: #004494;
 }
 
-.loan-mgmt-form h2 {
-    font-size: 20px;
-    margin-bottom: 20px;
-    text-align: center; /* Center align title */
-    color: #333;
-}
-
-.loan-mgmt-form label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: #666;
-}
-
-.loan-mgmt-form select, .loan-mgmt-form input[type="number"] {
-    padding: 10px;
+.fd-form .readonly-field {
+    background-color: #f0f0f0;
     border: 1px solid #ccc;
+    padding: 10px;
     border-radius: 5px;
     width: 100%;
     margin-bottom: 20px;
 }
 
-.loan-mgmt-form button {
-    background-color:#0056b3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 10px 20px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+/* Previous FDs Container */
+#previousFDsContainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
 }
 
-.loan-mgmt-form button:hover {
-    background-color:#0056b3;
+#previousFDsContainer h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center; /* Center align title */
 }
+
+#previousFDsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#previousFDsTable th, #previousFDsTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#previousFDsTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #555;
+}
+
+#previousFDsTable td {
+    color: #333;
+}
+
+#previousFDsTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsive Design: Adjust the layout for smaller screens */
+@media (max-width: 768px) {
+    .fd-container {
+        flex-direction: column;
+    }
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.readonly-field {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 8px;
+    width: 100%;
+}
+
+/* Container for the loan management form and the previous loans table */
+.loan-mgmt-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Ensures the top of both sections align */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Styling for the loan application form */
+.loan-mgmt-form {
+    width: 48%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the form fields */
+.loan-mgmt-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.loan-mgmt-form input,
+.loan-mgmt-form select,
+.loan-mgmt-form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.loan-mgmt-form button {
+    background-color: #004494;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.loan-mgmt-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.loan-mgmt-form button:hover:enabled {
+    background-color: #004494;
+}
+
+/* Loading and error/success messages */
+#loading {
+    font-size: 16px;
+    color: #555;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+#success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+/* Styling for the previous loans table */
+.loan-list {
+    width: 48%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loan-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.loan-list th, 
+.loan-list td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.loan-list th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.loan-list td {
+    background-color: #f9f9f9;
+}
+
+.loan-list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
 .modal {
             display: none; 
             position: fixed; 
@@ -850,40 +1017,69 @@
         <button id="mobileRechargeButton">Mobile Recharge</button>
     </div>
 </div>
-<!-- Add the Loan Management form container element -->
-<div class="loan-mgmt-form" id="loanMgmtFormContainer" style="display: none;">
-    <h2>Loan Management</h2>
-    <form>
-        <!-- Button to check previous applied loans -->
-        <button id="checkPreviousLoans" onclick="checkPreviousLoans()">Check Previous Applied Loans</button>
-        <br><br>
+<div class="loan-mgmt-container">
+    <!-- Loan Management form container -->
+    <div class="loan-mgmt-form" id="loanMgmtFormContainer" style="display: none;">
+        <h2>Loan Management</h2>
+        <form id="loanForm" onsubmit="return Loanapply(event)">
+            <!-- Button to check previous loans -->
+            <button type="button" onclick="Loanscheckprev()">Check Previous Applied Loans</button>
+            
+            <!-- Customer ID field (auto-filled) -->
+            <label for="customerId">Customer ID:</label>
+            <input type="text" id="customerId" name="customerId" placeholder="Enter your customer ID" readonly>
 
-        <!-- Loan type dropdown -->
-        <label for="loanType">Loan Type:</label>
-        <select id="loanType" name="loanType">
-            <!-- Scroll options for loan types -->
-            <option value="">Select Loan Type</option>
-            <option value="Personal Loan">Personal Loan</option>
-            <option value="Home Loan">Home Loan</option>
-            <option value="Car Loan">Car Loan</option>
-            <!-- Add more options as needed -->
-        </select>
-        <br><br>
+            <!-- Loan Type dropdown -->
+            <label for="loanType">Loan Type:</label>
+            <select id="loanType" name="loanType" required>
+                <option value="">Select Loan Type</option>
+                <option value="home">Home Loan</option>
+                <option value="car">Car Loan</option>
+                <option value="personal">Personal Loan</option>
+                <option value="business">Business Loan</option>
+            </select>
 
-        <!-- Amount input field -->
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" />
-        <br><br>
+            <!-- Loan Amount field -->
+            <label for="amount">Amount (Rs.):</label>
+            <input type="number" id="amount" name="amount" placeholder="Enter loan amount" required>
 
-        <!-- Tenure input field -->
-        <label for="tenure">Tenure:</label>
-        <input type="number" id="tenure" name="tenure" />
-        <br><br>
+            <!-- Loan Tenure field -->
+            <label for="tenure">Tenure (Years):</label>
+            <input type="number" id="tenure" name="tenure" placeholder="Enter loan tenure in years" required>
 
-        <!-- Submit button -->
-        <button id="submitLoan" onclick="submitLoan()">Submit</button>
-    </form>
+            <!-- Submit button -->
+            <button type="submit" id="applyLoanButton">Submit</button>
+
+            <!-- Loading Indicator -->
+            <div id="loading" style="display: none;">Processing your loan application...</div>
+
+            <!-- Messages -->
+            <div id="error-message"></div>
+            <div id="success-message"></div>
+        </form>
+    </div>
+
+    <!-- Loan list container (for displaying previous loans) -->
+    <div class="loan-list" id="loanListContainer" style="display: none;">
+        <h2>Previous Loans</h2>
+        <table id="loanTable">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>Loan Type</th>
+                    <th>Amount (Rs.)</th>
+                    <th>Tenure (Years)</th>
+                    <th>Date</th>
+                    <th>Reference ID</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loan records will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 <!-- Account Closure Form -->
 <div class="account-closure-form" id="accountClosureFormContainer">
@@ -913,41 +1109,81 @@
         </form>
     </div>
 </div>
-<!-- Add the FD form container element -->
-<div class="fd-form" id="fdFormContainer" style="display: none;">
-    <h2>Fixed Deposit</h2>
-    <form>
-        <label for="fdName">Name of FD:</label>
-        <select id="fdName" name="fdName">
-            <!-- Scroll options for FD names -->
-            <option value="">Select FD Name</option>
-            <option value="FD 1">FD 1</option>
-            <option value="FD 2">FD 2</option>
-            <option value="FD 3">FD 3</option>
-            <!-- Add more options as needed -->
-        </select>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" />
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" />
-        <label for="tenure">Tenure:</label>
-        <input type="number" id="tenure" name="tenure" />
-        <label for="roi">Rate of Interest (ROI):</label>
-        <input type="number" id="roi" name="roi" />
-        <button id="submitFD" onclick="submitFD()">Submit</button>
-    </form>
+<!-- FD Form and Previous FDs Container -->
+<div class="fd-container">
+    <!-- FD Form -->
+    <div class="fd-form" id="fdFormContainer">
+        <h2>Fixed Deposit</h2>
+        <form id="fdForm">
+            <label for="customerID">Customer Id:</label>
+            <input type="text" id="customerID" name="customerID" readonly class="readonly-field">
 
-    <!-- Button to check previous FDs -->
-    <button id="checkPreviousFD" onclick="checkPreviousFD()">Check Previous FDs</button>
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" readonly class="readonly-field">
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" readonly>
+
+            <label for="amountt">Amount:</label>
+            <input type="number" id="amountt" name="amountt" required oninput="calculateROI()" />
+
+            <label for="tenuree">Tenure:</label>
+            <select id="tenuree" name="tenuree" required onchange="calculateROI()">
+                <option value="">Select Tenure</option>
+                <option value="14 days">14 days</option>
+                <option value="3 months">3 months</option>
+                <option value="6 months">6 months</option>
+                <option value="1 year">1 year</option>
+                <option value="2 years">2 years</option>
+                <option value="5 years">5 years</option>
+                <option value="10 years">10 years</option>
+            </select>
+
+            <label for="roi">Rate of Interest (ROI):</label>
+            <input type="number" id="roi" name="roi" required readonly />
+
+            <label for="maturityDate">Maturity Date:</label>
+            <input type="date" id="maturityDate" name="maturityDate" readonly />
+
+            <label for="totalAmount">Total Amount after Tenure:</label>
+            <input type="number" id="totalAmount" name="totalAmount" required readonly />
+
+            <button type="button" id="submitFD" onclick="FDsubmit()">Submit</button>
+            <br>
+            <button type="button" id="previousFDs" onclick="showPreviousFDs()">Previous FDs</button>
+        </form>
+    </div>
+
+    <!-- Previous FDs -->
+    <div id="previousFDsContainer">
+        <h2>Previous Fixed Deposits</h2>
+        <table id="previousFDsTable">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Amount</th>
+                    <th>Age</th>
+                    <th>Tenure</th>
+                    <th>ROI</th>
+                    <th>Total Amount</th>
+                    <th>Created At</th>
+                    <th>Maturity Date</th> <!-- Added column for Maturity Date -->
+                </tr>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Previous FDs will be inserted here -->
+            </tbody>
+        </table>
+    </div>
 </div>
-
 
     <!-- Passbook Table -->
 <div class="passbook-table" id="passbookTableContainer">
     <h2>Passbook</h2>
     <div>
         <label for="customerId">Customer ID:</label>
-        <input type="text" id="customerId" placeholder="Enter Customer ID" disabled>
+        <input type="text" id="customerIdPass" placeholder="Enter Customer ID" disabled>
         <button id="fetchTransactions" onclick="fetchTransactions()">Fetch Transactions</button>
     </div>
 
@@ -1106,7 +1342,7 @@
 
       
 
-    <div class="container">
+    <div class="profilecontainer">
         <div class="profile-info" id="profileInfo">
             <h1>Profile Information</h1>
             <div class="profile-tables">
@@ -1214,6 +1450,7 @@
         }
 
         function showProfile() {
+           
             document.getElementById('profileInfo').style.display = 'block';
     document.getElementById('fundTransferPanel').style.display = 'none';
     document.getElementById('rtgsForm').style.display = 'none';
@@ -1227,6 +1464,10 @@
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+
+ document.getElementById('previousFDsContainer').style.display = 'none';
+ // Other sections hidden as required
+ document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
 
 
@@ -1305,6 +1546,11 @@ function openFundTransfers() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     document.getElementById('impsForm').style.display = 'none';
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    loanMgmtFormContainer.style.display = "none";
+
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
 }
 
@@ -1332,6 +1578,7 @@ function openRTGS() {
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
     document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
+    document.getElementById('previousFDsContainer').style.display = 'none';
    
 
     hideUPIButtons();
@@ -1348,6 +1595,9 @@ function openNEFT() {
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
     document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
     
     hideUPIButtons();
 
@@ -1450,6 +1700,9 @@ function openImps() {
     document.getElementById('neftForm').style.display = 'none'; // Show NEFT form
     document.getElementById('ddForm').style.display = 'none'; // Hide DD form
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
 
     
@@ -1530,6 +1783,9 @@ function openBillPayments() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
     
   
     // Hide other sections as needed
@@ -1579,7 +1835,8 @@ function openDD() {
     document.getElementById('rtgsForm').style.display = 'none'; // Hide RTGS form
     document.getElementById('neftForm').style.display = 'none'; // Hide NEFT form
     document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
-    
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
     hideUPIButtons();
 
 
@@ -1706,6 +1963,9 @@ function openPassbook() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 }
 
 // Function to fetch transactions and populate the passbook table
@@ -1721,7 +1981,7 @@ function fetchTransactions() {
                 const customerId = user.customer_id; // Get customer ID from user data
                 
                 // Set the customer ID in the passbook input field
-                document.getElementById('customerId').value = customerId;
+                document.getElementById('customerIdPass').value = customerId;
 
                 // Fetch transactions from the database using customer ID
                 fetch(`http://localhost:3001/transactions?customer_id=${customerId}`)
@@ -1836,11 +2096,14 @@ document.getElementById('generateStatementButton').addEventListener('click', gen
 function openAccountClosure() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'block';
+    document.getElementById('previousFDsContainer').style.display = 'none';
 }
 function closeAccount() {
     const confirmationDialog = document.getElementById('confirmationDialog');
     confirmationDialog.style.display = 'block';
+
 }
+// Function to open the Fixed Deposit (FD) form
 function openFD() {
     document.getElementById('fdFormContainer').style.display = 'block';
     document.getElementById('fundTransferPanel').style.display = 'none';
@@ -1851,8 +2114,370 @@ function openFD() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+    document.getElementById('previousFDsContainer').style.display = 'block';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
-    // Hide other sections as needed
+    // Fetch customer ID, name, and age directly
+    const username = localStorage.getItem('username');
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    document.getElementById('customerID').value = user.customer_id;
+                    document.getElementById('customerName').value = user.name;
+
+                    // Calculate age from date of birth
+                    const dob = new Date(user.dob);
+                    const today = new Date();
+                    const age = today.getFullYear() - dob.getFullYear();
+                    document.getElementById('age').value = age;
+                }
+            });
+    }
+}
+
+// Function to show previous FDs
+function showPreviousFDs() {
+    document.getElementById('fdFormContainer').style.display = 'block';
+    document.getElementById('previousFDsContainer').style.display = 'block';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+
+    const customerId = document.getElementById('customerID').value;
+
+    // Fetch the previous FDs from the server for the specific customer ID
+    fetch(`http://localhost:3001/previousFDs?customerId=${customerId}`, {
+        method: 'GET ',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const tbody = document.getElementById('previousFDsTable').querySelector('tbody');
+        tbody.innerHTML = ''; // Clear any existing data
+
+        if (data.success) {
+            // Populate table with the returned fixed deposits
+            data.fds.forEach(fd => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fd.customer_name}</td>
+                    <td>${fd.amount}</td>
+                    <td>${fd.age}</td>
+                    <td>${fd.tenure}</td>
+                    <td>${fd.roi}</td>
+                    <td>${fd.total_amount}</td>
+                    <td>${new Date(fd.created_at).toLocaleDateString()}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            alert(data.message); // No FDs found
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching previous FDs:', error);
+        alert('Failed to retrieve previous FDs: ' + error.message);
+    });
+}
+
+// Add event listeners to the fields
+// Add event listeners for input changes and submission
+document.getElementById('amountt').addEventListener('input', updateCalculations);
+document.getElementById('tenuree').addEventListener('change', updateCalculations);
+document.getElementById('submitFD').addEventListener('click', FDsubmit);
+
+function updateCalculations() {
+    const age = parseInt(document.getElementById('age').value, 10);
+    const tenure = document.getElementById('tenuree').value;
+    const amount = parseFloat(document.getElementById('amountt').value);
+
+    // Update ROI calculation and display it
+    const roi = calculateROI(age, tenure);
+    // Calculate and display total amount after completion of tenure
+    const totalAmount = calculateTotalAmount(amount, roi, tenure);
+    document.getElementById('totalAmount').value = totalAmount.toFixed(2); // Display total amount
+
+
+    // Calculate and update maturity date
+    const maturityDate = calculateMaturityDate(tenure);
+    document.getElementById('maturityDate').value = maturityDate.toISOString().split('T')[0];
+
+    
+
+}
+// Function to calculate maturity date based on tenure
+function calculateMaturityDate(tenure) {
+    const startDate = new Date(); // Current date
+    switch (tenure) {
+        case "14 days":
+            startDate.setDate(startDate.getDate() + 14);
+            break;
+        case "3 months":
+            startDate.setMonth(startDate.getMonth() + 3);
+            break;
+        case "6 months":
+            startDate.setMonth(startDate.getMonth() + 6);
+            break;
+        case "1 year":
+            startDate.setFullYear(startDate.getFullYear() + 1);
+            break;
+        case "2 years":
+            startDate.setFullYear(startDate.getFullYear() + 2);
+            break;
+        case "5 years":
+            startDate.setFullYear(startDate.getFullYear() + 5);
+            break;
+        case "10 years":
+            startDate.setFullYear(startDate.getFullYear() + 10);
+            break;
+        default:
+            break;
+    }
+    return startDate;
+}
+
+function calculateROI(age, tenure) {
+    let roi = 0;
+
+    if (age < 60) {
+        roi = (tenure === "14 days") ? 4.5 :
+              (tenure === "3 months") ? 5.0 :
+              (tenure === "6 months") ? 5.5 :
+              (tenure === "1 year") ? 6.0 :
+              (tenure === "2 years") ? 6.5 :
+              (tenure === "5 years") ? 7.0 :
+              (tenure === "10 years") ? 7.5 : 0;
+    } else {
+        roi = (tenure === "14 days") ? 5.0 :
+              (tenure === "3 months") ? 5.5 :
+              (tenure === "6 months") ? 6.0 :
+              (tenure === "1 year") ? 6.5 :
+              (tenure === "2 years") ? 7.0 :
+              (tenure === "5 years") ? 7.5 :
+              (tenure === "10 years") ? 8.0 : 0;
+    }
+
+    document.getElementById('roi').value = roi.toFixed(2); // Update ROI in the input field
+    return roi;
+}
+
+// Function to calculate the total amount after completion of tenure
+function calculateTotalAmount(amount, roi, tenure) {
+    if (!amount || !roi) return 0;
+
+    const years = getTenureInYears(tenure);
+    return amount + (amount * (roi / 100) * years); // Total amount = principal + interest
+}
+
+// Function to convert tenure to years
+function getTenureInYears(tenure) {
+    switch (tenure) {
+        case "14 days":
+            return 14 / 365; // Approximate fraction of year
+        case "3 months":
+            return 3 / 12;
+        case "6 months":
+            return 6 / 12;
+        case "1 year":
+            return 1;
+        case "2 years":
+            return 2;
+        case "5 years":
+            return 5;
+        case "10 years":
+            return 10;
+        default:
+            return 0; // No valid tenure
+    }
+}
+
+// Function to submit FD
+function FDsubmit(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const button = document.getElementById('submitFD');
+    button.disabled = true; // Disable the button immediately
+
+    const customerId = document.getElementById('customerID').value;
+    const customerName = document.getElementById('customerName').value;
+    const amount = parseFloat(document.getElementById('amountt').value);
+    const age = parseInt(document.getElementById('age').value, 10);
+    const tenure = document.getElementById('tenuree').value;
+    const maturityDate = document.getElementById('maturityDate').value;
+    // Call functions to calculate ROI and total amount right before submission
+    const roi = calculateROI(age, tenure);
+    const totalAmount = calculateTotalAmount(amount, roi, tenure);
+
+    
+
+    // Validate form fields
+    if (!customerId || !customerName || !amount || !age || !tenure || isNaN(roi) || isNaN(totalAmount)) {
+        alert('Please fill out all fields correctly.');
+        button.disabled = false; // Re-enable button on error
+        return;
+    }
+
+    if (amount <= 0 || roi <= 0) {
+        alert('Please enter positive values for amount and ROI.');
+        button.disabled = false; // Re-enable button on error
+        return;
+    }
+
+    if (age <= 0 || age > 150) {
+        alert('Please enter a valid age.');
+        button.disabled = false; // Re-enable button on error
+        return;
+    }
+
+    if (amount > 9999999) {
+        alert('Maximum limit for FD is 9000000.');
+        button.disabled = false; // Re-enable button on error
+        return;
+    }
+
+    // Prepare data for submission
+    
+    const data = { customerId, customerName, amount, age, tenure, roi, totalAmount, maturityDate }; // Add maturityDate
+
+    // Send the data to the server
+    fetch('http://localhost:3001/submitFD', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(result => {
+        alert(result.message); // Show success message
+        document.getElementById('fdForm').reset(); // Reset form fields
+        button.disabled = false; // Re-enable button
+
+        // Deduct money from source account
+        deductMoneyFromSourceAccount(amount);
+    })
+    .catch(error => {
+        console.error('Error submitting FD:', error);
+       // alert('Failed to create FD: ' + error.message); // Show error message
+        button.disabled = false; // Re-enable button
+    });
+}
+
+// Function to deduct money from source account
+function deductMoneyFromSourceAccount(amount) {
+    const sourceAccountNumber = document.getElementById('customerID').value;
+
+    // Update source account balance
+    const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE customer_id = ? AND balance >= ?`;
+    db.query(updateSourceBalance, [amount, sourceAccountNumber, amount], (err, results) => {
+        if (err) {
+            console.error('Error updating source balance:', err);
+            return;
+        }
+        if (results.affectedRows === 0) {
+            console.error('Insufficient funds or invalid source account number.');
+            return;
+        }
+
+        // Update sender balance in customers table
+        const updateCustomersTableSender = `
+            UPDATE customers
+            SET balance = balance - ?
+            WHERE customer_id = ?
+        `;
+        db.query(updateCustomersTableSender, [amount, sourceAccountNumber], (err) => {
+            if (err) {
+                console.error('Error updating customers table for sender:', err);
+                return;
+            }
+        });
+
+        // Insert transaction record
+        const insertTransaction = `
+            INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+            VALUES (?, ?, ?, NOW(), ?)
+        `;
+        const transactionId = `TRX${Math.floor(Math.random() * 100000)}`;
+        const particulars = `Fixed Deposit Creation`;
+        db.query(insertTransaction, [sourceAccountNumber, transactionId, -amount, particulars], (err) => {
+            if (err) {
+                console.error('Error inserting transaction record:', err);
+                return;
+            }
+        });
+    });
+}
+
+// Function to show previous FDs
+function showPreviousFDs() {
+    document.getElementById('fdFormContainer').style.display = 'block';
+    document.getElementById('previousFDsContainer').style.display = 'block';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+
+    // Fetch customer ID directly
+    const username = localStorage.getItem('username');
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    const customerId = user.customer_id;
+
+                    // Fetch the previous FDs from the server for the specific customer ID
+                    fetch(`http://localhost:3001/previousFDs?customerId=${customerId}`, {
+                        method: 'GET',
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const tbody = document.getElementById('previousFDsTable').querySelector('tbody');
+                        tbody.innerHTML = ''; // Clear any existing data
+
+                        if (data.success) {
+                            // Populate table with the returned fixed deposits
+                            data.fds.forEach(fd => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${fd.customer_name}</td>
+                                    <td>${fd.amount}</td>
+                                    <td>${fd.age}</td>
+                                    <td>${fd.tenure}</td>
+                                    <td>${fd.roi}</td>
+                                    <td>${fd.total_amount}</td>
+                                    <td>${new Date(fd.created_at).toLocaleDateString()}</td>
+                                    <td>${new Date(fd.maturity_date).toLocaleDateString()}</td>
+                                `;
+                                tbody.appendChild(row);
+                            });
+                        } else {
+                            alert(data.message); // No FDs found
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching previous FDs:', error);
+                        alert('Failed to retrieve previous FDs: ' + error.message);
+                    });
+                }
+            });
+    }
 }
 function openAccountClosure() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
@@ -1864,6 +2489,9 @@ function openAccountClosure() {
     passbookTableContainer.style.display = 'none';
     document.getElementById('fdFormContainer').style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
 }
 // Function to open the Loan Management form
@@ -1874,6 +2502,7 @@ function openLoanManagement() {
     // Show the Loan Management form
     loanMgmtFormContainer.style.display = "block";
     document.getElementById('fundTransferPanel').style.display = 'none';
+    document.getElementById('previousFDsContainer').style.display = 'none';
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
     document.getElementById('billPaymentsSection').style.display = 'none';
     const passbookTableContainer = document.getElementById('passbookTableContainer');
@@ -1881,31 +2510,156 @@ function openLoanManagement() {
     document.getElementById('fdFormContainer').style.display = 'none';
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
+    var loanMgmtFormContainer = document.getElementById("loanMgmtFormContainer");
+    loanMgmtFormContainer.style.display = "block";
 
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+
+
+      // Fetch customer ID directly using the username stored in localStorage
+      const username = localStorage.getItem('username'); // Get 'username' from localStorage
+    
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    const customerId = user.customer_id; // Get customer_id from the API response
+
+                    // Populate the customer ID field
+                    document.getElementById('customerId').value = customerId;
+                } else {
+                    alert('Failed to retrieve customer data.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching customer data:', error);
+                alert('Error fetching customer ID. Please try again.');
+            });
+    } else {
+        alert('No username found in localStorage.');
+    }
+}
+// Function to check previous loans
+function Loanscheckprev() {
+    const customerId = document.getElementById("customerId").value.trim();
+
+    if (!customerId) {
+        alert('Please enter a valid Customer ID.');
+        return;
+    }
+
+    fetch('http://localhost:3001/get-loans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayLoans(data.loans);
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while fetching loans.');
+    });
 }
 
-// Function to check previous applied loans
-function checkPreviousLoans() {
-    // TO DO: Implement logic to check previous applied loans
-    console.log("Checking previous applied loans...");
+function displayLoans(loans) {
+    const loanTableBody = document.querySelector('#loanTable tbody');
+    loanTableBody.innerHTML = ''; // Clear any previous rows
+
+    if (loans.length === 0) {
+        const noLoansRow = document.createElement('tr');
+        noLoansRow.innerHTML = '<td colspan="5">No loans found.</td>';
+        loanTableBody.appendChild(noLoansRow);
+        return;
+    }
+
+    loans.forEach(loan => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${loan.loan_id}</td>
+            <td>${loan.loanType}</td>
+            <td>Rs.${loan.amount}</td>
+            <td>${loan.tenure}</td>
+            <td>${new Date(loan.loanDate).toLocaleDateString()}</td>
+            <td>${loan.referenceId}</td> <!-- New column for referenceId -->
+        `;
+
+        loanTableBody.appendChild(row);
+    });
+
+    // Make sure the loan list container is visible
+    document.getElementById('loanListContainer').style.display = 'block';
 }
 
-// Function to submit loan application
-function submitLoan() {
-    // Get the loan type, amount, and tenure from the form
-    var loanType = document.getElementById("loanType").value;
-    var amount = document.getElementById("amount").value;
-    var tenure = document.getElementById("tenure").value;
+// Main function to apply for a loan
+function Loanapply(event) {
+    event.preventDefault();
 
-    // TO DO: Implement logic to submit loan application
-    console.log("Submitting loan application...");
-    console.log("Loan Type: " + loanType);
-    console.log("Amount: " + amount);
-    console.log("Tenure: " + tenure);
+    const button = document.getElementById('applyLoanButton');
+    button.disabled = true;
+    document.getElementById('loading').style.display = 'block';
+
+    // Clear previous messages
+    document.getElementById('error-message').innerText = '';
+    document.getElementById('success-message').innerText = '';
+
+    const customerId = document.getElementById("customerId").value.trim();
+    const loanType = document.getElementById("loanType").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const tenure = parseInt(document.getElementById("tenure").value);
+
+    if (!customerId || !loanType || isNaN(amount) || amount <= 0 || isNaN(tenure) || tenure <= 0) {
+        document.getElementById('error-message').innerText = 'Please fill out valid loan details.';
+        button.disabled = false;
+        document.getElementById('loading').style.display = 'none';
+        return;
+    }
+
+    // Prepare the loan data
+    const loanData = { customerId, loanType, amount, tenure };
+
+    // Send loan request to the server
+    fetch('http://localhost:3001/apply-loan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loanData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loading').style.display = 'none';
+
+        if (data.success) {
+            document.getElementById('success-message').innerText = `Loan submitted successfully! Reference ID: ${data.referenceId} visit branch for security/documents realted purpose`;
+            document.getElementById('loanForm').reset(); // Clear the form
+            // Automatically fetch and display previous loans after applying the loan
+            Loanscheckprev();
+        } else {
+            document.getElementById('error-message').innerText = `Error: ${data.message}`;
+        }
+
+        button.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error-message').innerText = `An error occurred: ${error.message}`;
+        button.disabled = false;
+    });
 }
-      
+
+ 
         window.onload = function() {
             document.getElementById('fdFormContainer').style.display = 'none';
+            document.getElementById('previousFDsContainer').style.display = 'none';
             const passbookTableContainer = document.getElementById('passbookTableContainer');
     passbookTableContainer.style.display = 'none';
     document.getElementById('billPaymentsSection').style.display = 'none';
@@ -1913,6 +2667,8 @@ function submitLoan() {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
+    // Other sections hidden as required
+    document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
 
             const username = localStorage.getItem('username');
             if (username) {

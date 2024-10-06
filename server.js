@@ -909,7 +909,7 @@ app.get('/transactions', (req, res) => {
         res.json({ success: true, transactions: results });
     });
 });
-// Route to fetch transactions for generating a statement within a date range
+// Generate Statement Endpoint
 app.get('/generateStatement', (req, res) => {
     const customerId = req.query.customer_id;
     const startDate = req.query.startDate;  // Optional start date
@@ -945,7 +945,321 @@ app.get('/generateStatement', (req, res) => {
             return res.status(500).json({ success: false, error: 'Error generating statement' });
         }
 
-        res.json({ success: true, transactions: results });
+        // Generate PDF if results are fetched successfully
+        if (results.length > 0) {
+            const pdfDoc = new PDFDocument();
+            const desktopPath = path.join(process.env.HOME || process.env.USERPROFILE, 'Desktop', 'Madhur');
+            
+            // Create the directory if it doesn't exist
+            if (!fs.existsSync(desktopPath)) {
+                fs.mkdirSync(desktopPath, { recursive: true });
+            }
+
+            const pdfPath = path.join(desktopPath, `Statement_${customerId}_${new Date().toISOString().split('T')[0]}.pdf`);
+
+            // Stream PDF document to file
+            pdfDoc.pipe(fs.createWriteStream(pdfPath));
+
+            // Add title and metadata
+            pdfDoc.fontSize(20).text('Bank Statement', { align: 'center' });
+            pdfDoc.moveDown();
+            pdfDoc.fontSize(12).text(`Customer ID: ${customerId}`);
+            pdfDoc.text(`Date Range: ${startDate || 'N/A'} to ${endDate || 'N/A'}`);
+            pdfDoc.text(`Generated on: ${new Date().toLocaleDateString()}`);
+            pdfDoc.moveDown();
+
+            // Add table headers
+            pdfDoc.fontSize(12);
+            pdfDoc.text('Transaction ID', 50, pdfDoc.y);
+            pdfDoc.text('Date', 150, pdfDoc.y);
+            pdfDoc.text('Particulars', 250, pdfDoc.y);
+            pdfDoc.text('Amount', 400, pdfDoc.y);
+            pdfDoc.text('Balance After', 500, pdfDoc.y);
+            pdfDoc.moveDown();
+
+            // Add transaction details
+            results.forEach(transaction => {
+                // Ensure amount and balance_after are numbers
+                const amount = parseFloat(transaction.amount);
+                const balanceAfter = parseFloat(transaction.balance_after);
+                
+                // Check for NaN values
+                if (isNaN(amount) || isNaN(balanceAfter)) {
+                    console.error('Invalid number detected in transaction:', transaction);
+                    return; // Skip this iteration if there's an invalid number
+                }
+
+                pdfDoc.text(transaction.transaction_id, 50, pdfDoc.y);
+                pdfDoc.text(transaction.date.toISOString().split('T')[0], 150, pdfDoc.y);
+                pdfDoc.text(transaction.particulars, 250, pdfDoc.y);
+                pdfDoc.text(`₹${amount.toFixed(2)}`, 400, pdfDoc.y);
+                pdfDoc.text(`₹${balanceAfter.toFixed(2)}`, 500, pdfDoc.y);
+                pdfDoc.moveDown(0.5); // Add some spacing between transactions
+            });
+
+            // Finalize the PDF and end the document
+            pdfDoc.end();
+
+            // Send response after PDF is generated
+            res.json({
+                success: true,
+                message: 'Statement generated successfully.',
+                pdfPath: pdfPath, // Send back the file path of the saved PDF
+                transactions: results // Send back the transaction data as well
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'No transactions found for the selected date range.'
+            });
+        }
+    });
+});
+// Endpoint to submit FD
+app.post('/submitFD', (req, res) => {
+    const { customerId, customerName, amount, age, tenure, roi, totalAmount,maturityDate } = req.body;
+
+    // Validate input data
+    if (!customerId || !customerName || !amount || !age || !tenure || roi === undefined || totalAmount === undefined || !maturityDate) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+   // SQL query to insert data into the fixed_deposits table
+    const query = `
+        INSERT INTO fixed_deposits (customer_id, customer_name, amount, age, tenure, roi, total_amount, maturity_date, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+    `;
+    const values = [customerId, customerName, amount, age, tenure, roi, totalAmount, maturityDate];
+
+    db.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Transaction start error' });
+        }
+
+        db.query(query, values, (err, result) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).json({ message: 'Error inserting data into fixed_deposits' });
+                });
+            }
+
+            // Retrieve current balance of the customer
+            const getBalanceQuery = `SELECT balance FROM customers WHERE customer_id = ?`;
+            db.query(getBalanceQuery, [customerId], (err, balanceResult) => {
+                if (err) {
+                    return db.rollback(() => {
+                        res.status(500).json({ message: 'Error retrieving customer balance' });
+                    });
+                }
+
+                const currentBalance = balanceResult[0].balance;
+
+                // Deduct money from source account
+                const sourceAccountNumber = customerId;
+                const updateSourceBalance = `UPDATE accounts SET balance = balance - ? WHERE customer_id = ? AND balance >= ?`;
+                db.query(updateSourceBalance, [amount, sourceAccountNumber, amount], (err, results) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).json({ message: 'Error updating source balance' });
+                        });
+                    }
+                    if (results.affectedRows === 0) {
+                        return db.rollback(() => {
+                            res.status(400).json({ message: 'Insufficient funds or invalid source account number.' });
+                        });
+                    }
+
+                    // Update sender balance in customers table
+                    const updateCustomersTableSender = `
+                        UPDATE customers
+                        SET balance = balance - ?
+                        WHERE customer_id = ?
+                    `;
+                    db.query(updateCustomersTableSender, [amount, sourceAccountNumber], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).json({ message: 'Error updating customers table for sender' });
+                            });
+                        }
+
+                        // Insert transaction record
+                        const insertTransaction = `
+                            INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars, balance_after)
+                            VALUES (?, ?, ?, NOW(), ?, ?)
+                        `;
+                        const transactionId = `TRX${Math.floor(Math.random() * 100000)}`;
+                        const particulars = `Fixed Deposit Creation`;
+                        const balanceAfter = currentBalance - amount; // Update balance_after
+                        db.query(insertTransaction, [sourceAccountNumber, transactionId, -amount, particulars, balanceAfter], (err) => {
+                            if (err) {
+                                return db.rollback(() => {
+                                    res.status(500).json({ message: 'Error inserting transaction record' });
+                                });
+                            }
+
+                            db.commit((err) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ message: 'Transaction commit error' });
+                                    });
+                                }
+
+                                // Create a PDF
+                                const pdfData = {
+                                    customerName,
+                                    amount,
+                                    age,
+                                    tenure,
+                                    roi,
+                                    totalAmount,
+                                    maturityDate,
+                                    date: new Date().toLocaleDateString()
+                                   
+                                };
+
+                                // Use the desktop path for saving the PDF
+                                const desktopPath = path1.join(process.env.HOME || process.env.USERPROFILE, 'Desktop/Madhur');
+                                
+                                // Create the directory if it doesn't exist
+                                if (!fs.existsSync(desktopPath)) {
+                                    fs.mkdirSync(desktopPath, { recursive: true });
+                                }
+
+                                const pdfPath = path1.join(desktopPath, `FD_${customerName}.pdf`); // Define your path to save the PDF
+
+                                // Create a new PDF document
+                                const pdfDoc = new PDFDocument();
+
+                                // Create PDF content
+                                pdfDoc.pipe(fs.createWriteStream(pdfPath));
+                                pdfDoc.fontSize(25).text('Fixed Deposit Receipt', { align: 'center' });
+                                pdfDoc.moveDown();
+                                pdfDoc.fontSize(12).text(`Customer Name: ${customerName}`);
+                                pdfDoc.text(`Amount: ₹${amount}`);
+                                pdfDoc.text(`Age: ${age}`);
+                                pdfDoc.text(`Tenure: ${tenure} years`);
+                                pdfDoc.text(`ROI: ${roi}%`);
+                                pdfDoc.text(`Total Amount: ₹${totalAmount}`);
+                                pdfDoc.text(`Date: ${pdfData.date}`);
+                                pdfDoc.text(`Maturity Date: ${maturityDate}`);
+                                pdfDoc.end();
+
+                                res.status(200).json({ message: 'Fixed deposit created successfully', id: result.insertId });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+app.get('/previousFDs', (req, res) => {
+    const customerId = req.query.customerId; // Get customer ID from query parameters
+    
+    if (!customerId) {
+        return res.status(400).json({ success: false, message: 'Customer ID is required.' });
+    }
+
+    // Query to fetch previous FDs for the specified customer ID from 'fixed_deposits'
+    const fdQuery = `
+        SELECT 
+            customer_name,  
+            amount,
+            age,
+            tenure,
+            roi,
+            total_amount,
+              maturity_date,
+            created_at
+        FROM 
+            fixed_deposits
+        WHERE 
+            customer_id = ?;
+    `;
+
+    db.query(fdQuery, [customerId], (err, fdResults) => {
+        if (err) {
+            console.error('Error fetching previous FDs:', err);
+            return res.status(500).json({ success: false, message: 'Failed to retrieve previous FDs.' });
+        }
+
+        if (fdResults.length > 0) {
+            res.json({ success: true, fds: fdResults });
+        } else {
+            res.json({ success: false, message: 'No previous FDs found for this customer.' });
+        }
+    });
+});
+
+// Loan application endpoint
+app.post('/apply-loan', (req, res) => {
+    const { customerId, loanType, amount, tenure } = req.body;
+
+    // Validate the input
+    if (!customerId || !loanType || !amount || !tenure) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+
+    // Parse amount and tenure to ensure they are valid numbers
+    const parsedAmount = parseFloat(amount);
+    const parsedTenure = parseFloat(tenure);
+
+    if (isNaN(parsedAmount) || parsedAmount <= 0 || isNaN(parsedTenure) || parsedTenure <= 0) {
+        return res.status(400).json({ success: false, message: 'Invalid amount or tenure.' });
+    }
+
+    // Verify if the customerId exists in the customers table
+    const customerQuery = 'SELECT * FROM customers WHERE customer_id = ?';
+    db.query(customerQuery, [customerId], (customerErr, customerResults) => {
+        if (customerErr) {
+            console.error('Error fetching customer:', customerErr);
+            return res.status(500).json({ success: false, message: 'Database error while fetching customer.' });
+        }
+
+        if (customerResults.length === 0) {
+            // If no matching customer found
+            return res.status(404).json({ success: false, message: 'Customer not found.' });
+        }
+
+        // Generate a unique reference ID
+        const referenceId = `REF${Date.now()}-${customerId}`;
+
+        // If customer exists, proceed to insert loan application
+        const loansQuery = 'INSERT INTO loans (customerId, loanType, amount, tenure, referenceId) VALUES (?, ?, ?, ?, ?)';
+        const loansValues = [customerId, loanType, parsedAmount, parsedTenure, referenceId];
+
+        db.query(loansQuery, loansValues, (loansErr, loansResults) => {
+            if (loansErr) {
+                console.error('Error inserting loan application:', loansErr);
+                return res.status(500).json({ success: false, message: 'Database error while inserting loan.' });
+            }
+
+            // Respond with success message if loan application is inserted successfully
+            res.json({ success: true, message: 'Loan application submitted successfully!', referenceId });
+        });
+    });
+});
+
+app.post('/get-loans', (req, res) => {
+    const { customerId } = req.body;
+
+    // Validate if customerId is provided
+    if (!customerId) {
+        return res.status(400).json({ success: false, message: 'Customer ID is required.' });
+    }
+
+    // Define the loans query to fetch loans for the given customer including the referenceId
+    const loansQuery = 'SELECT loan_id, loanType, amount, tenure, loanDate, referenceId FROM loans WHERE customerId = ?';
+    const loansValues = [customerId];
+
+    // Execute the loans query
+    db.query(loansQuery, loansValues, (err, results) => {
+        if (err) {
+            console.error('Error fetching loans:', err);
+            return res.status(500).json({ success: false, message: 'Database error while fetching loans.' });
+        }
+
+        // Respond with the list of loans
+        res.json({ success: true, loans: results });
     });
 });
 
