@@ -1263,6 +1263,356 @@ app.post('/get-loans', (req, res) => {
     });
 });
 
+// Account closure endpoint
+app.post('/close-account', (req, res) => {
+    console.log('Received request:', req.body); // Log the incoming request
+
+    const { customerid, reason } = req.body;
+
+    // Basic validation to ensure customerid and reason exist
+    if (!customerid || !reason) {
+        return res.status(400).json({ success: false, message: 'Customer ID and reason are required.' });
+    }
+
+    // Verify if the customerId exists in the customers table
+    const customerQuery = 'SELECT * FROM customers WHERE customer_id = ?';
+    db.query(customerQuery, [customerid], (customerErr, customerResults) => {
+        if (customerErr) {
+            console.error('Error fetching customer:', customerErr);
+            return res.status(500).json({ success: false, message: 'Database error while fetching customer.' });
+        }
+
+        if (customerResults.length === 0) {
+            // If no matching customer found
+            return res.status(404).json({ success: false, message: 'Customer not found.' });
+        }
+
+        // SQL query to insert the closure request into the database
+        const closureQuery = 'INSERT INTO account_clsre (customerid, reason) VALUES (?, ?)';
+        db.query(closureQuery, [customerid, reason], (err, result) => {
+            if (err) {
+                console.error('Database query error:', err); // Log the database error
+                return res.status(500).json({ success: false, message: 'An error occurred while processing your request.' });
+            }
+
+            console.log('Account closure request processed:', result);
+            res.status(200).json({ success: true, message: 'Account closure request submitted successfully.Branch will contact you within 2days of request submission' });
+        });
+    });
+});
+
+app.post('/saveElectricityBill', (req, res) => {
+    const { company_name, consumer_number, amount } = req.body;
+
+    if (!company_name || !consumer_number || !amount) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const getAccountDetails = `SELECT customer_id, balance FROM accounts WHERE consumer_number = ?`;
+    db.query(getAccountDetails, [consumer_number], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: 'Error fetching account details' });
+        if (results.length === 0) return res.status(400).json({ success: false, message: 'Invalid consumer number' });
+
+        const { customer_id } = results[0];
+        const currentBalance = results[0].balance;
+
+        if (currentBalance < amount) {
+            return res.status(400).json({ success: false, message: 'Insufficient balance' });
+        }
+
+        const updateAccountsTable = `UPDATE accounts SET balance = balance - ? WHERE consumer_number = ?`;
+        db.query(updateAccountsTable, [amount, consumer_number], (err) => {
+            if (err) return res.status(500).json({ success: false, message: 'Error updating accounts table' });
+
+            const trxId = `TRX${Math.floor(Math.random() * 100000)}`;
+            const particulars = `Electricity bill payment to ${company_name}`;
+            const insertTransaction = `
+                INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                VALUES (?, ?, ?, NOW(), ?)
+            `;
+            db.query(insertTransaction, [customer_id, trxId, -amount, particulars], (err) => {
+                if (err) return res.status(500).json({ success: false, message: 'Transaction record insert error' });
+
+                const updateCustomersTableSender = `
+                    UPDATE customers
+                    SET balance = balance - ?
+                    WHERE customer_id = ?
+                `;
+                db.query(updateCustomersTableSender, [amount, customer_id], (err) => {
+                    if (err) return res.status(500).json({ success: false, message: 'Error updating customers table for sender' });
+
+                    const getAccountBalance = `SELECT balance FROM accounts WHERE consumer_number = ?`;
+                    db.query(getAccountBalance, [consumer_number], (err, results) => {
+                        if (err || results.length === 0) return res.status(500).json({ success: false, message: 'Error fetching account balance' });
+
+                        const latestBalance = results[0].balance;
+                        const updateTransactionBalance = `
+                            UPDATE transactions
+                            SET balance_after = ?
+                            WHERE transaction_id = ?
+                        `;
+                        db.query(updateTransactionBalance, [latestBalance, trxId], (err) => {
+                            if (err) return res.status(500).json({ success: false, message: 'Error updating transaction balance' });
+
+                            res.json({ success: true, message: 'Electricity bill payment processed successfully!' });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+app.post('/saveLpgBill', (req, res) => {
+    const { company_name, consumer_number, amount } = req.body;
+
+    if (!company_name || !consumer_number || !amount) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const getAccountDetails = `SELECT customer_id, balance FROM accounts WHERE consumer_number = ?`;
+    db.query(getAccountDetails, [consumer_number], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: 'Error fetching account details' });
+        if (results.length === 0) return res.status(400).json({ success: false, message: 'Invalid consumer number' });
+
+        const { customer_id } = results[0];
+        const currentBalance = results[0].balance;
+
+        if (currentBalance < amount) {
+            return res.status(400).json({ success: false, message: 'Insufficient balance' });
+        }
+
+        const updateAccountsTable = `UPDATE accounts SET balance = balance - ? WHERE consumer_number = ?`;
+        db.query(updateAccountsTable, [amount, consumer_number], (err) => {
+            if (err) return res.status(500).json({ success: false, message: 'Error updating accounts table' });
+
+            const trxId = `TRX${Math.floor(Math.random() * 100000)}`;
+            const particulars = `LPG bill payment to ${company_name}`;
+            const insertTransaction = `
+                INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                VALUES (?, ?, ?, NOW(), ?)
+            `;
+            db.query(insertTransaction, [customer_id, trxId, -amount, particulars], (err) => {
+                if (err) return res.status(500).json({ success: false, message: 'Transaction record insert error' });
+
+                const updateCustomersTableSender = `
+                    UPDATE customers
+                    SET balance = balance - ?
+                    WHERE customer_id = ?
+                `;
+                db.query(updateCustomersTableSender, [amount, customer_id], (err) => {
+                    if (err) return res.status(500).json({ success: false, message: 'Error updating customers table for sender' });
+
+                    const getAccountBalance = `SELECT balance FROM accounts WHERE consumer_number = ?`;
+                    db.query(getAccountBalance, [consumer_number], (err, results) => {
+                        if (err || results.length === 0) return res.status(500).json({ success: false, message: 'Error fetching account balance' });
+
+                        const latestBalance = results[0].balance;
+                        const updateTransactionBalance = `
+                            UPDATE transactions
+                            SET balance_after = ?
+                            WHERE transaction_id = ?
+                        `;
+                        db.query(updateTransactionBalance, [latestBalance, trxId], (err) => {
+                            if (err) return res.status(500).json({ success: false, message: 'Error updating transaction balance' });
+
+                            res.json({ success: true, message: 'LPG bill payment processed successfully!' });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+app.post('/saveWaterBill', (req, res) => {
+    const { company_name, consumer_number, amount } = req.body;
+
+    if (!company_name || !consumer_number || !amount) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const getAccountDetails = `SELECT customer_id, balance FROM accounts WHERE consumer_number = ?`;
+    db.query(getAccountDetails, [consumer_number], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: 'Error fetching account details' });
+        if (results.length === 0) return res.status(400).json({ success: false, message: 'Invalid consumer number' });
+
+        const { customer_id } = results[0];
+        const currentBalance = results[0].balance;
+
+        if (currentBalance < amount) {
+            return res.status(400).json({ success: false, message: 'Insufficient balance' });
+        }
+
+        const updateAccountsTable = `UPDATE accounts SET balance = balance - ? WHERE consumer_number = ?`;
+        db.query(updateAccountsTable, [amount, consumer_number], (err) => {
+            if (err) return res.status(500).json({ success: false, message: 'Error updating accounts table' });
+
+            const trxId = `TRX${Math.floor(Math.random() * 100000)}`;
+            const particulars = `Water bill payment to ${company_name}`;
+            const insertTransaction = `
+                INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                VALUES (?, ?, ?, NOW(), ?)
+            `;
+            db.query(insertTransaction, [customer_id, trxId, -amount, particulars], (err) => {
+                if (err) return res.status(500).json({ success: false, message: 'Transaction record insert error' });
+
+                const updateCustomersTableSender = `
+                    UPDATE customers
+                    SET balance = balance - ?
+                    WHERE customer_id = ?
+                `;
+                db.query(updateCustomersTableSender, [amount, customer_id], (err) => {
+                    if (err) return res.status(500).json({ success: false, message: 'Error updating customers table for sender' });
+
+                    const getAccountBalance = `SELECT balance FROM accounts WHERE consumer_number = ?`;
+                    db.query(getAccountBalance, [consumer_number], (err, results) => {
+                        if (err || results.length === 0) return res.status(500).json({ success: false, message: 'Error fetching account balance' });
+
+                        const latestBalance = results[0].balance;
+                        const updateTransactionBalance = `
+                            UPDATE transactions
+                            SET balance_after = ?
+                            WHERE transaction_id = ?
+                        `;
+                        db.query(updateTransactionBalance, [latestBalance, trxId], (err) => {
+                            if (err) return res.status(500).json({ success: false, message: 'Error updating transaction balance' });
+
+                            res.json({ success: true, message: 'Water bill payment processed successfully!' });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+app.post('/saveRecharge', (req, res) => {
+    console.log('Received data:', req.body);
+    const { mobile_number, mobile_operator, region, amount } = req.body;
+
+    // Input validation
+    if (!mobile_number || !mobile_operator || !region || !amount) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    // Check if amount is a valid number and greater than zero
+    if (isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ success: false, message: 'Amount must be a positive number' });
+    }
+
+    // Fetch the customer ID based on the mobile number
+    const getCustomerId = `SELECT customer_id FROM customers WHERE mobile_number = ?`;
+    db.query(getCustomerId, [mobile_number], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ success: false, message: 'Error fetching customer ID' });
+        }
+        if (results.length === 0) {
+            return res.status(400).json({ success: false, message: 'Invalid mobile number' });
+        }
+
+        const customerId = results[0].customer_id;
+
+        // Fetch the balance from the accounts table using the customer ID
+        const getAccountBalance = `SELECT balance FROM accounts WHERE customer_id = ?`;
+        db.query(getAccountBalance, [customerId], (err, results) => {
+            if (err || results.length === 0) {
+                return res.status(500).json({ success: false, message: 'Error fetching account balance' });
+            }
+
+            const currentBalance = results[0].balance;
+
+            // Check if there is sufficient balance
+            if (currentBalance < amount) {
+                return res.status(400).json({ success: false, message: 'Insufficient balance' });
+            }
+
+            // Update the balance in the customers table first
+            const updateCustomersTableSender = `
+                UPDATE customers
+                SET balance = balance - ?
+                WHERE customer_id = ?
+            `;
+            db.query(updateCustomersTableSender, [amount, customerId], (err) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Error updating customers table for sender' });
+                }
+
+                // Update the balance in the accounts table
+                const updateAccountsTable = `UPDATE accounts SET balance = balance - ? WHERE customer_id = ?`;
+                db.query(updateAccountsTable, [amount, customerId], (err) => {
+                    if (err) {
+                        return res.status(500).json({ success: false, message: 'Error updating accounts table' });
+                    }
+
+                    // Insert the transaction record
+                    const trxId = `TRX${Math.floor(Math.random() * 100000)}`;
+                    const insertTransaction = `
+                        INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars)
+                        VALUES (?, ?, ?, NOW(), ?)
+                    `;
+                    const particulars = `Mobile recharge to ${mobile_operator} (${region})`;
+                    db.query(insertTransaction, [customerId, trxId, -amount, particulars], (err) => {
+                        if (err) {
+                            return res.status(500).json({ success: false, message: 'Transaction record insert error' });
+                        }
+
+                        // Fetch the latest balance and update the transaction balance_after
+                        db.query(getAccountBalance, [customerId], (err, results) => {
+                            if (err || results.length === 0) {
+                                return res.status(500).json({ success: false, message: 'Error fetching account balance' });
+                            }
+
+                            const latestBalance = results[0].balance;
+                            const updateTransactionBalance = `
+                                UPDATE transactions
+                                SET balance_after = ?
+                                WHERE transaction_id = ?
+                            `;
+                            db.query(updateTransactionBalance, [latestBalance, trxId], (err) => {
+                                if (err) {
+                                    return res.status(500).json({ success: false, message: 'Error updating transaction balance' });
+                                }
+
+                                res.json({ success: true, message: 'Mobile recharge processed successfully!' });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
+// Fetch recent transactions endpoint
+app.post('/recent-transactions', (req, res) => {
+    const { customerId } = req.body;
+
+    // Validate if customerId is provided
+    if (!customerId) {
+        return res.status(400).json({ success: false, message: 'Customer ID is required.' });
+    }
+
+    // Define the transactions query to fetch the last 5 transactions for the given customer
+    const transactionsQuery = `
+        SELECT transaction_id, amount, date, particulars, balance_after 
+        FROM transactions 
+        WHERE customer_id = ? 
+        ORDER BY timestamp DESC 
+        LIMIT 5
+    `;
+    const transactionsValues = [customerId];
+
+    // Execute the transactions query
+    db.query(transactionsQuery, transactionsValues, (err, results) => {
+        if (err) {
+            console.error('Error fetching transactions:', err);
+            return res.status(500).json({ success: false, message: 'Database error while fetching transactions.' });
+        }
+
+        // Respond with the list of transactions
+        res.json({ success: true, transactions: results });
+    });
+});
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

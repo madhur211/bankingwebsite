@@ -964,7 +964,399 @@ button:hover {
 #generateStatementButton:hover {
     background-color: #45a049;
 }
+/* ELECTRICITY */
+.elec-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+}
 
+.elec-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.elec-form h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.elec-form table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.elec-form th {
+    text-align: left;
+    padding: 10px 0;
+    font-weight: normal;
+    color: #555;
+}
+
+.elec-form td {
+    padding: 10px 0;
+}
+
+.elec-form input[type="text"],
+.elec-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.elec-form .form-info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.elec-form #proceedButton {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.elec-form #proceedButton:hover {
+    background-color: #45a049;
+}
+
+.elec-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Additional media queries for responsiveness */
+@media (max-width: 768px) {
+    .elec-form {
+        max-width: 100%;
+        padding: 15px;
+    }
+}
+
+/* Water form */
+.water-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+}
+
+.water-form select,
+.water-form input[type="text"],
+.water-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.water-form h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.water-form table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.water-form th {
+    text-align: left;
+    padding: 10px 0;
+    font-weight: normal;
+    color: #555;
+}
+
+.water-form td {
+    padding: 10px 0;
+}
+
+.water-form #proceedButtonWater {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.water-form #proceedButtonWater:hover {
+    background-color: #45a049;
+}
+
+.water-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .water-form {
+        max-width: 100%;
+        padding: 15px;
+    }
+}
+
+
+/* LPG form */
+.lpg-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+}
+
+.lpg-form select,
+.lpg-form input[type="text"],
+.lpg-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.lpg-form h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.lpg-form table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.lpg-form th {
+    text-align: left;
+    padding: 10px 0;
+    font-weight: normal;
+    color: #555;
+}
+
+.lpg-form td {
+    padding: 10px 0;
+}
+
+.lpg-form #proceedButtonLpg {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.lpg-form #proceedButtonLpg:hover {
+    background-color: #45a049;
+}
+
+.lpg-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .lpg-form {
+        max-width: 100%;
+        padding: 15px;
+    }
+}
+
+/* Password Popup Styles */
+.password-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+}
+
+.popup-content input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.popup-content button {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.popup-content button:hover {
+    background-color: #45a049;
+}
+
+
+
+/* Mobile Recharge Form */
+.recharge-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: none;
+}
+
+.recharge-form select,
+.recharge-form input[type="text"],
+.recharge-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.recharge-form h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.recharge-form table {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.recharge-form th {
+    text-align: left;
+    padding: 10px 0;
+    font-weight: normal;
+    color: #555;
+}
+
+.recharge-form td {
+    padding: 10px 0;
+}
+
+.recharge-form #proceedButtonRecharge {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.recharge-form #proceedButtonRecharge:hover {
+    background-color: #45a049;
+}
+
+.recharge-form .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .recharge-form {
+        max-width: 100%;
+        padding: 15px;
+    }
+}
+ /* Style for the Recent Transactions heading */
+ .transaction-heading {
+            text-align: center; /* Center align the heading */
+            margin: 20px 0;    /* Add some margin above and below */
+            font-size: 24px;    /* Adjust font size */
+            color: #333;        /* Change text color */
+        }
+/* Transaction Table */
+#transactionTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Table Header */
+#transactionTable th {
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+/* Table Cells */
+#transactionTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+/* Row Hover Effect */
+#transactionTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Display the table only when needed */
+#transactionTable {
+    display: none; /* Initially hidden; show when there are transactions */
+}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -1002,21 +1394,211 @@ button:hover {
             <button onclick="openFD()">Fixed Deposits</button>
             <button onclick="openLoanManagement()">Loan Management</button>
             <button onclick="openAccountClosure()">Account Closure</button>
+
         </div>
         
 
 
         <!-- Bill Payments Section -->
 
-<div class="bill-payments" id="billPaymentsSection" style="display: none;">
-    <h2>Bill Payments & Recharges</h2>
-    <div class="bill-payment-options">
-        <button id="electricityBillButton">Electricity Bill</button>
-        <button id="waterBillButton">Water Bill</button>
-        <button id="lpgBillButton">LPG Bill</button>
-        <button id="mobileRechargeButton">Mobile Recharge</button>
-    </div>
-</div>
+        <div class="bill-payments" id="billPaymentsSection" style="display: none;">
+            <h2>Bill Payments & Recharges</h2>
+            <div class="bill-payment-options">
+                <button id="electricityBillButton" onclick="openElectric()">Electricity Bill</button>
+                <button id="waterBillButton" onclick="openWater()">Water Bill</button>
+                <button id="lpgBillButton" onclick="openLpg()">LPG Bill</button>
+                <button id="mobileRechargeButton" onclick="openRecharge()">Mobile Recharge</button>
+            </div>
+        </div>
+        
+        
+        <!-- Electricity form  -->
+        <div class="elec-form" id="electricityForm" style="display: none;"> 
+            <h2>Electricity Billing Form</h2>
+            <table>
+                <tr>
+                    <th>Company Name</th>
+                    <td>
+                        <select id="companyName">
+                            <option value="" disabled selected>Select a Company</option>
+                            <option value="msedcl">MSEDCL</option>
+                            <option value="mspgcl">MSPGCL</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Consumer Number</th>
+                    <td><input type="text" id="consumerNumber" placeholder="Enter consumer number" required></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="number" id="amount" placeholder="Enter amount" min="1" required></td>
+                </tr>
+            </table>
+            
+            <button id="proceedButton" onclick="proceedElectricBill()">Proceed</button>
+        
+            <!-- Error message for validation -->
+            <div class="error-message" id="billingError" style="display: none;"></div>
+        </div>
+        
+        <!-- Water Billing Form -->
+        <div class="water-form" id="waterform" style="display: none;">
+            <h2>Water Billing Form</h2>
+            <table>
+                <!-- <tr>
+                    <th>Customer ID</th>
+                    <td><input type="text" id="customerIdWater" placeholder="Customer ID" readonly></td>
+                </tr> -->
+                <tr>
+                    <th>Company Name</th>
+                    <td>
+                        <select id="companyNameWater">
+                            <option value="">Select Company</option>
+                            <option value="mwrra">MWRRA</option>
+                            <option value="mjp">MJP</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Consumer Number</th>
+                    <td><input type="text" id="consumerNumberWater" placeholder="Enter consumer number"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="number" id="amountWater" placeholder="Enter amount" min="1"></td>
+                </tr>
+            </table>
+        
+            <!-- Proceed button -->
+            <button id="proceedButtonWater" onclick="proceedWater()">Proceed</button>
+        
+            <!-- Error message for validation -->
+            <div class="error-message" id="billingErrorWater" style="display: none;"></div>
+        </div>
+        
+        
+        <!-- LPG Billing Form -->
+        
+        
+        <div class="lpg-form" id="Lpgform" style="display: none;">
+            <h2>LPG Billing Form</h2>
+            <table>
+                <tr>
+                    <th>Company Name</th>
+                    <td>
+                        <select id="companyNameLpg">
+                            <option value="">Select Company</option>
+                            <option value="bharat">Bharat Gas</option>
+                            <option value="hp">HP Gas</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Consumer Number</th>
+                    <td><input type="text" id="consumerNumberLpg" placeholder="Enter consumer number"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="number" id="amountLpg" placeholder="Enter amount" min="1"></td>
+                </tr>
+                <tr>
+                    <th>Subsidy Eligibility</th>
+                    <td><input type="checkbox" id="subsidyLpg"> Eligible for Subsidy</td>
+                </tr>
+            </table>
+            <button id="proceedButtonLpg" onclick="proceedLpg()">Proceed</button>
+        
+            <!-- Error message for validation -->
+            <div class="error-message" id="billingErrorLpg" style="display: none;"></div>
+        </div>
+        
+        <!-- <div class="lpg-form" id="Lpgform" style="display: none;">
+            <h2>LPG Billing Form</h2>
+            <table>
+                <tr>
+                    <th>Customer ID</th>
+                    <td><input type="text" id="customerIdLpg" placeholder="Customer ID" readonly></td>
+                </tr>
+                <tr>
+                    <th>Company Name</th>
+                    <td>
+                        <select id="companyNameLpg">
+                            <option value="">Select Company</option>
+                            <option value="bharat">Bharat Gas</option>
+                            <option value="hp">HP Gas</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Consumer Number</th>
+                    <td><input type="text" id="consumerNumberLpg" placeholder="Enter consumer number"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="number" id="amountLpg" placeholder="Enter amount" min="1"></td>
+                </tr>
+                <tr>
+                    <th>Subsidy Eligibility</th>
+                    <td><input type="checkbox" id="subsidyLpg"> Eligible for Subsidy</td>
+                </tr>
+            </table>
+            <button id="proceedButtonLpg" onclick="proceedLpg()">Proceed</button>
+        
+             //Error message for validation 
+            <div class="error-message" id="billingErrorLpg" style="display: none;"></div>
+        </div>
+        // Password Popup Div (initially hidden) 
+        <div class="password-popup" id="passwordPopup" style="display: none;">
+            <div class="popup-content">
+                <h3>Enter Password</h3>
+                <input type="password" id="passwordLpg" placeholder="Enter your password">
+                <button id="submitPasswordLpg" onclick="submitLpgForm()">Submit</button>
+                <button id="cancelPasswordLpg" onclick="closePasswordPopup()">Cancel</button>
+                <div class="error-message" id="passwordErrorLpg" style="display: none;"></div>
+            </div>
+        </div> -->
+        
+        
+        
+        <!-- Mobile Recharge Form -->
+        <div class="recharge-form" id="rechargeform" style="display: none;">
+            <h2>Mobile Recharge Form</h2>
+            <table>
+                <tr>
+                    <th>Mobile Number</th>
+                    <td><input type="text" id="mobileNumber" placeholder="Enter mobile number"></td>
+                </tr>
+                <tr>
+                    <th>Operator</th>
+                    <td>
+                        <select id="mobileOperator">
+                            <option value="">Select Operator</option>
+                            <option value="vi">Vi</option>
+                            <option value="jio">Jio</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Region</th>
+                    <td>
+                        <select id="region">
+                            <option value="">Select Region</option>
+                            <option value="maharashtra">Maharashtra</option>
+                            <option value="delhi">Delhi</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="number" id="amountRecharge" placeholder="Enter amount" min="10"></td>
+                </tr>
+            </table>
+            <button id="proceedButtonRecharge" onclick="proceedRecharge()">Submit</button>
+        
+            <!-- Error message for validation -->
+            <div class="error-message" id="rechargeError" style="display: none;"></div>
+        </div>
 <div class="loan-mgmt-container">
     <!-- Loan Management form container -->
     <div class="loan-mgmt-form" id="loanMgmtFormContainer" style="display: none;">
@@ -1040,8 +1622,8 @@ button:hover {
             </select>
 
             <!-- Loan Amount field -->
-            <label for="amount">Amount (Rs.):</label>
-            <input type="number" id="amount" name="amount" placeholder="Enter loan amount" required>
+            <label for="amount1">Amount (Rs.):</label>
+            <input type="number" id="amount1" name="amount" placeholder="Enter loan amount" required>
 
             <!-- Loan Tenure field -->
             <label for="tenure">Tenure (Years):</label>
@@ -1083,32 +1665,18 @@ button:hover {
 
 <!-- Account Closure Form -->
 <div class="account-closure-form" id="accountClosureFormContainer">
-    <h2>Account Closure</h2>
-    <form>
-        <label for="reason">Reason for Closure:</label>
-        <textarea id="reason" name="reason"></textarea>
-        <button id="closeAccountButton" onclick="closeAccount()">Close Account</button>
+    <h2>Request Account Closure</h2>
+    <form id="accountClosureForm">
+        <label for="customerid">Customer Id:</label><br>
+        <input type="text" id="customerid" name="customerid" required minlength="6" maxlength="50" readonly placeholder="Fetching Customer ID..."><br><br>
+
+        <label for="reason">Reason for Closure:</label><br>
+        <textarea id="reason" name="reason" rows="4" cols="50" placeholder="Enter the reason for closure"></textarea><br><br>
+
+        <input type="submit" value="Submit" onclick="accountClosure(event)">        
     </form>
-
-    <!-- Confirmation Dialog -->
-    <div class="confirmation-dialog" id="confirmationDialog">
-        <h2>Confirm Account Closure</h2>
-        <p>Are you sure you want to close your account?</p>
-        <button id="confirmButton" onclick="confirmAccountClosure()">Yes, Close Account</button>
-        <button id="cancelButton" onclick="cancelAccountClosure()">Cancel</button>
-    </div>
-
-    <!-- Transfer Details Form -->
-    <div class="transfer-details-form" id="transferDetailsFormContainer">
-        <h2>Transfer Details</h2>
-        <form>
-            <label for="newAccountNumber">New Account Number:</label>
-            <input type="text" id="newAccountNumber" name="newAccountNumber" />
-            <label for="newAccountName">New Account Name:</label>
-            <input type="text" id="newAccountName" name="newAccountName" />
-        </form>
-    </div>
 </div>
+
 <!-- FD Form and Previous FDs Container -->
 <div class="fd-container">
     <!-- FD Form -->
@@ -1407,7 +1975,7 @@ button:hover {
                   
                         <tr>
                             <th>Mobile Number</th>
-                            <td><input type="text" id="mobileNumber" readonly></td>
+                            <td><input type="text" id="mobileNumber1" readonly></td>
                         </tr>
                         <tr>
                             <th>Operation Mode</th>
@@ -1437,8 +2005,23 @@ button:hover {
             </div>
         </div>
     </div>
-    
-
+    <div class="transaction-heading">Recent Five Transactions</div>
+    <table id="transactionTable" style="display:none;">
+        <thead>
+          
+            <tr>
+                
+                <th>Transaction ID</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>Balance After</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Transaction rows will be appended here -->
+        </tbody>
+    </table>
     <footer class="footer">
         &copy; 2024 Ideal Bank. All Rights Reserved.
     </footer>
@@ -1450,7 +2033,7 @@ button:hover {
         }
 
         function showProfile() {
-           
+            document.querySelector('.transaction-heading').style.display = 'none';
             document.getElementById('profileInfo').style.display = 'block';
     document.getElementById('fundTransferPanel').style.display = 'none';
     document.getElementById('rtgsForm').style.display = 'none';
@@ -1464,10 +2047,19 @@ button:hover {
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
     loanMgmtFormContainer.style.display = "none";
-
+  
  document.getElementById('previousFDsContainer').style.display = 'none';
  // Other sections hidden as required
  document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+ const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    
 
 
 
@@ -1498,7 +2090,7 @@ button:hover {
                             document.getElementById('customerIdProfile').value = user.customer_id;
                             document.getElementById('accOpeningDate').value = formatDate(user.acc_opening_date);
                          
-                            document.getElementById('mobileNumber').value = user.mobile_number;
+                            document.getElementById('mobileNumber1').value = user.mobile_number;
                         } else {
                             console.log('Error fetching profile data:', data.error);
                         }
@@ -1520,6 +2112,7 @@ button:hover {
 function hideProfile() {
     document.getElementById('profileInfo').style.display = 'none'; // Hide profile section
     document.getElementById('fundTransferPanel').style.display = 'none'; // Show fund transfer panel
+    transactionTable.style.display = 'none';
     // Show other sections as needed
 }
         function displayDateTime() {
@@ -1551,6 +2144,15 @@ function openFundTransfers() {
     loanMgmtFormContainer.style.display = "none";
 
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
 
 }
 
@@ -1568,6 +2170,7 @@ function backToMain() {
     document.getElementById('upiSendMoneySection').style.display = 'none';
     document.getElementById('upiMainButtons').style.display = 'block';
     document.getElementById('generateUPIButton').disabled = false; // Re-enable the button
+    document.querySelector('.transaction-heading').style.display = 'none';
 }
 
 function openRTGS() {
@@ -1579,6 +2182,15 @@ function openRTGS() {
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
     document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
     document.getElementById('previousFDsContainer').style.display = 'none';
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
    
 
     hideUPIButtons();
@@ -1598,6 +2210,15 @@ function openNEFT() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
     
     hideUPIButtons();
 
@@ -1703,6 +2324,14 @@ function openImps() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
 
 
     
@@ -1786,10 +2415,354 @@ function openBillPayments() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
     
   
     // Hide other sections as needed
 }
+function openElectric() {
+    // Show the Electricity Billing form
+    const billingForm = document.getElementById('electricityForm');
+    billingForm.style.display = 'block';
+
+    // Hide other sections if necessary
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    document.getElementById('rechargeform').style.display = 'none';
+    transactionTable.style.display = 'none';
+
+    // Optionally, you can reset the form fields here if needed
+    document.getElementById('consumerNumber').value = ''; // Clear consumer number field
+    document.getElementById('amount').value = ''; // Clear amount field
+}
+async function proceedElectricBill() {
+    const username = localStorage.getItem('username'); // Assuming username is stored in local storage
+    const companyName = document.getElementById('companyName').value;
+    const consumerNumber = document.getElementById('consumerNumber').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const errorDiv = document.getElementById('billingError');
+
+    let errorMessage = "";
+
+    // Validate the form fields
+    if (companyName === "") {
+        errorMessage += "Please select a company name. ";
+    }
+
+    const consumerNumberRegex = /^CN\d{10}$/; // Assuming consumer number should start with 'CN' followed by 10 digits
+    if (!consumerNumber || !consumerNumberRegex.test(consumerNumber)) {
+        errorMessage += "Consumer number must start with 'CN' and be exactly 12 characters long. ";
+    }
+
+    if (amount <= 0 || isNaN(amount)) {
+        errorMessage += "Please enter a valid amount greater than 0. ";
+    }
+
+    // Show error message if there are validation issues
+    if (errorMessage !== "") {
+        errorDiv.innerText = errorMessage;
+        errorDiv.style.display = 'block';
+        return; // Stop further execution if there's an error
+    } else {
+        errorDiv.style.display = 'none';
+    }
+
+    // Create the payload for saving the electricity bill data
+    const billData = {
+        company_name: companyName,
+        consumer_number: consumerNumber,
+        amount: amount
+    };
+
+    // Send the bill data to your backend to save it
+    try {
+        const response = await fetch('http://localhost:3001/saveElectricityBill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(billData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Electricity bill payed successfully!');
+            console.log('Success:', result);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Error saving electricity bill data:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+
+function openWater() {
+    // Show the Water Billing form
+    const waterForm = document.getElementById('waterform');
+    waterForm.style.display = 'block';
+    // Optionally, hide other sections/forms
+document.getElementById('electricityForm').style.display = 'none';
+document.getElementById('Lpgform').style.display = 'none';
+document.getElementById('rechargeform').style.display = 'none';
+    // Optionally, fetch data
+
+      // Optionally, you can reset the form fields here if needed
+    document.getElementById('consumerNumber').value = ''; // Clear consumer number field
+    document.getElementById('amount').value = ''; // Clear amount field
+
+}
+
+async function proceedWater() {
+    const username = localStorage.getItem('username'); // Assuming username is stored in local storage
+    const consumerNumber = document.getElementById('consumerNumberWater').value;
+    const companyName = document.getElementById('companyNameWater').value;
+    const amount = parseFloat(document.getElementById('amountWater').value);
+    const errorDiv = document.getElementById('billingErrorWater');
+
+    let errorMessage = "";
+
+    // Validation logic: check if any field is empty or invalid
+    if (!username) {
+        errorMessage += "User must be logged in. ";
+    }
+
+    // Validate consumer number: starts with "CN" and exactly 12 characters long
+    const consumerNumberRegex = /^CN\d{10}$/;  // CN followed by 10 digits
+
+    if (!consumerNumber || !consumerNumberRegex.test(consumerNumber)) {
+        errorMessage += "Consumer number must start with 'CN' and be exactly 12 characters long. ";
+    }
+
+    if (amount <= 0 || isNaN(amount)) {
+        errorMessage += "Please enter a valid amount greater than 0. ";
+    }
+
+    if (companyName === "") {
+        errorMessage += "Please select a company name. ";
+    }
+
+    // If there's an error message, show it
+    if (errorMessage !== "") {
+        errorDiv.innerText = errorMessage;
+        errorDiv.style.display = 'block';
+        return; // Stop further execution if there's an error
+    }
+
+    // If all fields are valid, hide the error message
+    errorDiv.style.display = 'none';
+
+    // Create the payload
+    const billData = {
+        company_name: companyName,
+        consumer_number: consumerNumber, // Use the consumer number retrieved from local storage
+        amount: amount
+    };
+
+    // Send the data to the backend
+    try {
+        const response = await fetch('http://localhost:3001/saveWaterBill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(billData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Water bill processed and records updated successfully!');
+            console.log('Success:', result);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Error processing water bill:', error);
+        alert('Error: ' + error.message);
+    }
+}
+function openLpg() {
+    // Show the LPG Billing form
+    const lpgForm = document.getElementById('Lpgform');
+    lpgForm.style.display = 'block';
+
+    // Optionally, hide other forms
+   document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('rechargeform').style.display = 'none';
+    transactionTable.style.display = 'none';
+
+    // Optionally, fetch data
+    
+    // Optionally, you can reset the form fields here if needed
+    document.getElementById('consumerNumber').value = ''; // Clear consumer number field
+    document.getElementById('amount').value = ''; // Clear amount field
+}
+async function proceedLpg() {
+    const username = localStorage.getItem('username'); // Assuming username is stored in local storage
+    const consumerNumber = document.getElementById('consumerNumberLpg').value;
+    const amount = parseFloat(document.getElementById('amountLpg').value);
+    const companyName = document.getElementById('companyNameLpg').value;
+    const errorDiv = document.getElementById('billingErrorLpg');
+
+    let errorMessage = "";
+
+    // Validation logic: check if any field is empty or invalid
+    if (!username) {
+        errorMessage += "User must be logged in. ";
+    }
+
+    const consumerNumberRegex = /^CN\d{10}$/; // Assuming consumer number should start with 'CN' followed by 10 digits
+    if (!consumerNumber || !consumerNumberRegex.test(consumerNumber)) {
+        errorMessage += "Consumer number must start with 'CN' and be exactly 12 characters long. ";
+    }
+
+    if (amount <= 0 || isNaN(amount)) {
+        errorMessage += "Please enter a valid amount greater than 0. ";
+    }
+
+    if (companyName === "") {
+        errorMessage += "Please select a company name. ";
+    }
+
+    // If there's an error message, show it
+    if (errorMessage !== "") {
+        errorDiv.innerText = errorMessage;
+        errorDiv.style.display = 'block';
+        return; // Stop further execution if there's an error
+    } else {
+        errorDiv.style.display = 'none'; // Hide error message if all fields are valid
+    }
+
+    // Create the payload for saving the LPG bill data
+    const billData = {
+        company_name: companyName,
+        consumer_number: consumerNumber,
+        amount: amount
+    };
+
+    // Send the bill data to your backend to save it
+    try {
+        const response = await fetch('http://localhost:3001/saveLpgBill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(billData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('LPG bill processed and records updated successfully!');
+            console.log('Success:', result);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Error saving LPG bill data:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+function openRecharge() {
+    // Show the Mobile Recharge form
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'block';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+
+    // Optionally, you can reset the form fields here if needed
+    document.getElementById('consumerNumber').value = ''; // Clear consumer number field
+    document.getElementById('amount').value = ''; // Clear amount field
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
+
+}
+
+async function proceedRecharge() {
+    const mobileNumber = document.getElementById('mobileNumber').value;
+    const mobileOperator = document.getElementById('mobileOperator').value;
+    const region = document.getElementById('region').value;
+    const amount = parseFloat(document.getElementById('amountRecharge').value);
+    const errorDiv = document.getElementById('rechargeError');
+
+    let errorMessage = "";
+
+    // Validate the form fields
+    if (mobileNumber === "" || mobileNumber.length !== 10) {
+        errorMessage += "Please enter a valid 10-digit mobile number. ";
+    }
+
+    if (mobileOperator === "") {
+        errorMessage += "Please select a mobile operator. ";
+    }
+
+    if (region === "") {
+        errorMessage += "Please select a region. ";
+    }
+
+    if (amount <= 0 || isNaN(amount)) {
+        errorMessage += "Please enter a valid amount greater than 0. ";
+    }
+
+    // Show error message if there are validation issues
+    if (errorMessage !== "") {
+        errorDiv.innerText = errorMessage;
+        errorDiv.style.display = 'block';
+        return; // Stop further execution if there's an error
+    } else {
+        errorDiv.style.display = 'none';
+
+        // Create payload for processing the mobile recharge data
+        const rechargeData = {
+            mobile_number: mobileNumber,
+            mobile_operator: mobileOperator,
+            region: region,
+            amount: amount
+        };
+
+        // Send the recharge data to your backend to save it
+        try {
+            const response = await fetch('http://localhost:3001/saveRecharge', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rechargeData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save recharge data: ' + response.statusText);
+            }
+
+            const result = await response.json();
+            console.log('Recharge processed successfully:', result);
+            alert('Mobile recharge payed successfully!');
+        } catch (error) {
+            console.error('Error processing recharge data:', error);
+            alert('Error: ' + error.message);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 document.getElementById('electricityBillButton').addEventListener('click', function() {
     // Handle electricity bill payment
 });
@@ -1837,6 +2810,15 @@ function openDD() {
     document.getElementById('impsForm').style.display = 'none'; // Hide UPI form
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
     hideUPIButtons();
 
 
@@ -1966,6 +2948,16 @@ function openPassbook() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
+
 }
 
 // Function to fetch transactions and populate the passbook table
@@ -2093,16 +3085,7 @@ function generateStatement() {
 // Attach the function to the Generate Statement button
 document.getElementById('generateStatementButton').addEventListener('click', generateStatement);
 
-function openAccountClosure() {
-    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
-    accountClosureFormContainer.style.display = 'block';
-    document.getElementById('previousFDsContainer').style.display = 'none';
-}
-function closeAccount() {
-    const confirmationDialog = document.getElementById('confirmationDialog');
-    confirmationDialog.style.display = 'block';
 
-}
 // Function to open the Fixed Deposit (FD) form
 function openFD() {
     document.getElementById('fdFormContainer').style.display = 'block';
@@ -2117,6 +3100,15 @@ function openFD() {
     document.getElementById('previousFDsContainer').style.display = 'block';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+    transactionTable.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
 
     // Fetch customer ID, name, and age directly
     const username = localStorage.getItem('username');
@@ -2145,6 +3137,16 @@ function showPreviousFDs() {
     document.getElementById('previousFDsContainer').style.display = 'block';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
 
     const customerId = document.getElementById('customerID').value;
 
@@ -2426,6 +3428,15 @@ function showPreviousFDs() {
     document.getElementById('previousFDsContainer').style.display = 'block';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
 
     // Fetch customer ID directly
     const username = localStorage.getItem('username');
@@ -2492,12 +3503,22 @@ function openAccountClosure() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     // Other sections hidden as required
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
+
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    transactionTable.style.display = 'none';
+    document.querySelector('.transaction-heading').style.display = 'none';
 
 }
 // Function to open the Loan Management form
+// Function to open the Loan Management form
 function openLoanManagement() {
     // Get the Loan Management form container element
-    var loanMgmtFormContainer = document.getElementById("loanMgmtFormContainer");
+    const loanMgmtFormContainer = document.getElementById("loanMgmtFormContainer");
 
     // Show the Loan Management form
     loanMgmtFormContainer.style.display = "block";
@@ -2505,31 +3526,27 @@ function openLoanManagement() {
     document.getElementById('previousFDsContainer').style.display = 'none';
     document.getElementById('profileInfo').style.display = 'none'; // Hide Profile section
     document.getElementById('billPaymentsSection').style.display = 'none';
-    const passbookTableContainer = document.getElementById('passbookTableContainer');
-    passbookTableContainer.style.display = 'none';
+    document.getElementById('passbookTableContainer').style.display = 'none';
     document.getElementById('fdFormContainer').style.display = 'none';
-    const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
-    accountClosureFormContainer.style.display = 'none';
-    var loanMgmtFormContainer = document.getElementById("loanMgmtFormContainer");
-    loanMgmtFormContainer.style.display = "block";
-
-    // Other sections hidden as required
+    document.getElementById('accountClosureFormContainer').style.display = 'none';
+    document.getElementById('rechargeform').style.display = 'none';
+    document.getElementById('transactionTable').style.display = 'none';
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    document.querySelector('.transaction-heading').style.display = 'none';
 
-
-      // Fetch customer ID directly using the username stored in localStorage
-      const username = localStorage.getItem('username'); // Get 'username' from localStorage
+    // Fetch customer ID directly using the username stored in localStorage
+    const username = localStorage.getItem('username'); // Get 'username' from localStorage
     
     if (username) {
         fetch(`http://localhost:3001/dashboard?username=${username}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const user = data.user;
-                    const customerId = user.customer_id; // Get customer_id from the API response
-
-                    // Populate the customer ID field
-                    document.getElementById('customerId').value = customerId;
+                    const customerId = data.user.customer_id; // Get customer_id from the API response
+                    document.getElementById('customerId').value = customerId; // Populate the customer ID field
                 } else {
                     alert('Failed to retrieve customer data.');
                 }
@@ -2542,145 +3559,273 @@ function openLoanManagement() {
         alert('No username found in localStorage.');
     }
 }
-// Function to check previous loans
-function Loanscheckprev() {
-    const customerId = document.getElementById("customerId").value.trim();
 
-    if (!customerId) {
-        alert('Please enter a valid Customer ID.');
-        return;
-    }
-
-    fetch('http://localhost:3001/get-loans', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            displayLoans(data.loans);
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while fetching loans.');
-    });
-}
-
-function displayLoans(loans) {
-    const loanTableBody = document.querySelector('#loanTable tbody');
-    loanTableBody.innerHTML = ''; // Clear any previous rows
-
-    if (loans.length === 0) {
-        const noLoansRow = document.createElement('tr');
-        noLoansRow.innerHTML = '<td colspan="5">No loans found.</td>';
-        loanTableBody.appendChild(noLoansRow);
-        return;
-    }
-
-    loans.forEach(loan => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${loan.loan_id}</td>
-            <td>${loan.loanType}</td>
-            <td>Rs.${loan.amount}</td>
-            <td>${loan.tenure}</td>
-            <td>${new Date(loan.loanDate).toLocaleDateString()}</td>
-            <td>${loan.referenceId}</td> <!-- New column for referenceId -->
-        `;
-
-        loanTableBody.appendChild(row);
-    });
-
-    // Make sure the loan list container is visible
-    document.getElementById('loanListContainer').style.display = 'block';
-}
-
-// Main function to apply for a loan
+// Function to handle loan application form submission
 function Loanapply(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission
 
-    const button = document.getElementById('applyLoanButton');
-    button.disabled = true;
-    document.getElementById('loading').style.display = 'block';
+    const customerId = document.getElementById('customerId').value;
+    const loanType = document.getElementById('loanType').value;
+    const amount = document.getElementById('amount1').value;
+    const tenure = document.getElementById('tenure').value;
 
-    // Clear previous messages
-    document.getElementById('error-message').innerText = '';
-    document.getElementById('success-message').innerText = '';
+    const data = {
+        customerId: customerId,
+        loanType: loanType,
+        amount: amount,
+        tenure: tenure
+    };
 
-    const customerId = document.getElementById("customerId").value.trim();
-    const loanType = document.getElementById("loanType").value.trim();
-    const amount = parseFloat(document.getElementById("amount").value);
-    const tenure = parseInt(document.getElementById("tenure").value);
-
-    if (!customerId || !loanType || isNaN(amount) || amount <= 0 || isNaN(tenure) || tenure <= 0) {
-        document.getElementById('error-message').innerText = 'Please fill out valid loan details.';
-        button.disabled = false;
-        document.getElementById('loading').style.display = 'none';
-        return;
-    }
-
-    // Prepare the loan data
-    const loanData = { customerId, loanType, amount, tenure };
-
-    // Send loan request to the server
     fetch('http://localhost:3001/apply-loan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loanData)
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('loading').style.display = 'none';
-
-        if (data.success) {
-            document.getElementById('success-message').innerText = `Loan submitted successfully! Reference ID: ${data.referenceId} visit branch for security/documents realted purpose`;
-            document.getElementById('loanForm').reset(); // Clear the form
-            // Automatically fetch and display previous loans after applying the loan
-            Loanscheckprev();
-        } else {
-            document.getElementById('error-message').innerText = `Error: ${data.message}`;
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errData => {
+                throw new Error(errData.message || 'Server error');
+            });
         }
-
-        button.disabled = false;
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message); // Display response message
+        // Optionally, you can reset the form or redirect the user
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error-message').innerText = `An error occurred: ${error.message}`;
-        button.disabled = false;
+        alert('An error occurred: ' + error.message);
     });
 }
 
- 
-        window.onload = function() {
-            document.getElementById('fdFormContainer').style.display = 'none';
-            document.getElementById('previousFDsContainer').style.display = 'none';
-            const passbookTableContainer = document.getElementById('passbookTableContainer');
+function Loanscheckprev() {
+    // Fetch username from localStorage
+    const storedUsername = localStorage.getItem('username');
+    if (!storedUsername) {
+        alert('No username found in localStorage.');
+        return; // Exit the function if no username is found
+    }
+
+    // Fetch customer data using the stored username
+    fetch(`http://localhost:3001/dashboard?username=${storedUsername}`)
+        .then(response => {
+            if (!response.ok) {
+                // Log the error response for debugging
+                console.error('Failed to fetch customer data:', response.status, response.statusText);
+                throw new Error('Failed to fetch customer data: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(customerData => {
+            if (customerData.success) {
+                const customerId = customerData.user.customer_id; // Get customer_id from the API response
+                console.log('Fetching loans for customer ID:', customerId); // Log customer ID
+
+                // Fetch previous loans using the retrieved customerId
+                return fetch(`http://localhost:3001/get-loans`, { // Updated endpoint
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerId: customerId }) // Send customerId in the body
+                });
+            } else {
+                alert('Failed to retrieve customer data: ' + (customerData.message || 'Unknown error'));
+                throw new Error('Customer data retrieval failed');
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Failed to fetch loan data:', response.status, response.statusText);
+                throw new Error('Failed to fetch loan data: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(loanData => {
+            const loanTableBody = document.getElementById('loanTable').getElementsByTagName('tbody')[0];
+            loanTableBody.innerHTML = ''; // Clear previous loan records
+
+            if (loanData.success) {
+                // Populate table with the returned loans
+                loanData.loans.forEach(loan => {
+                    const loanRow = document.createElement('tr');
+                    loanRow.innerHTML = `
+                        <td>${loan.loan_id}</td>
+                        <td>${loan.loanType}</td> <!-- Ensure the property names match your API response -->
+                        <td>${loan.amount}</td>
+                        <td>${loan.tenure}</td>
+                        <td>${loan.loanDate}</td> <!-- Ensure the property names match your API response -->
+                        <td>${loan.referenceId}</td> <!-- Ensure the property names match your API response -->
+                    `;
+                    loanTableBody.appendChild(loanRow);
+                });
+
+                document.getElementById('loanListContainer').style.display = 'block'; // Show loan list
+            } else {
+                alert('No loans found: ' + (loanData.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message);
+        });
+}
+// Function to handle account closure form submission
+function accountClosure(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const customerid = document.getElementById('customerid').value;
+    const reason = document.getElementById('reason').value;
+
+    const data = {
+        customerid: customerid,
+        reason: reason
+    };
+
+    fetch('http://localhost:3001/close-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errData => {
+                throw new Error(errData.message || 'Server error');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message); // Display response message
+        // Optionally, you can reset the form or redirect the user
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+}
+
+// Fetch and populate customer ID for account closure
+function populateCustomerIDForClosure() {
+    const username = localStorage.getItem('username');
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    document.getElementById('customerid').value = user.customer_id;
+                } else {
+                    alert('Failed to retrieve customer data.');
+                }
+            })
+            .catch (error => {
+                console.error('Error fetching customer data:', error);
+                alert('Error fetching customer ID. Please try again.');
+            });
+    } else {
+        alert('No username found in localStorage.');
+    }
+}
+
+// Call the function when the form loads
+document.addEventListener('DOMContentLoaded', populateCustomerIDForClosure);
+   window.onload = function() {
+    document.getElementById('fdFormContainer').style.display = 'none';
+    document.getElementById('previousFDsContainer').style.display = 'none';
+    const passbookTableContainer = document.getElementById('passbookTableContainer');
     passbookTableContainer.style.display = 'none';
     document.getElementById('billPaymentsSection').style.display = 'none';
     document.getElementById('fundTransferPanel').style.display = 'none';
     const accountClosureFormContainer = document.getElementById('accountClosureFormContainer');
     accountClosureFormContainer.style.display = 'none';
-    loanMgmtFormContainer.style.display = "none";
-    // Other sections hidden as required
+    loanMgmtFormContainer.style.display = "none"; // Ensure loanMgmtFormContainer is defined
     document.getElementById('loanListContainer').style.display = 'none'; // Hide loan list initially
+    const rechargeForm = document.getElementById('rechargeform');
+    rechargeForm.style.display = 'none';
 
-            const username = localStorage.getItem('username');
-            if (username) {
-                fetch(`http://localhost:3001/dashboard?username=${username}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('marqueeText').textContent = `Welcome, ${data.user.name}! Thank you for banking with Ideal Bank!`;
-                        }
-                    });
+    // Optionally hide other sections/forms if necessary
+    document.getElementById('electricityForm').style.display = 'none'; 
+    document.getElementById('waterform').style.display = 'none';
+    document.getElementById('Lpgform').style.display = 'none';
+    
+
+    // Fetch customer details
+    const username = localStorage.getItem('username');
+    if (username) {
+        fetch(`http://localhost:3001/dashboard?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const user = data.user;
+                    document.getElementById('customerID').value = user.customer_id;
+                    document.getElementById('customerName').value = user.name;
+                    
+                    // Fetch recent transactions
+                    fetchRecentTransactions(user.customer_id);
+                    
+                    // Welcome message
+                    document.getElementById('marqueeText').textContent = `Welcome, ${user.name}! Thank you for banking with Ideal Bank!`;
+                }
+            });
+    }
+};
+
+// Function to fetch recent transactions
+function fetchRecentTransactions(customerId) {
+    fetch(`http://localhost:3001/recent-transactions`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayTransactions(data.transactions);
+        } else {
+            console.error('Error fetching transactions:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Function to display transactions
+function displayTransactions(transactions) {
+    const transactionTable = document.getElementById('transactionTable'); // Ensure this table exists in your HTML
+    transactionTable.innerHTML = ''; // Clear existing rows
+    const transactionHeading = document.querySelector('.transaction-heading'); // Select the heading
+
+
+    transactions.forEach(transaction => {
+        const row = document.createElement('tr');
+        const formattedDate = new Date(transaction.date).toLocaleDateString(); // Format the date to only show the date part
+        row.innerHTML = `
+            <td>${transaction.transaction_id}</td>
+            <td>${transaction.amount}</td>
+            <td>${formattedDate}</td> <!-- Display formatted date -->
+            <td>${transaction.particulars}</td>
+            <td>${transaction.balance_after}</td>
+        `;
+        transactionTable.appendChild(row);
+    });
+    if (transactions.length > 0) {
+                transactionHeading.style.display = 'block'; // Show the heading
+                transactionTable.style.display = 'table';   // Show the table
             }
-        };
+        
+
+        // Fetch transactions here and call displayTransactions(transactions) with the fetched data
+     else {
+        // If not on the intended page, ensure they remain hidden
+        document.querySelector('.transaction-heading').style.display = 'none';
+        document.getElementById('transactionTable').style.display = 'none';
+    }
+}
+
+
     </script>
 </body>
 </html>
