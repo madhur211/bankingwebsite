@@ -95,7 +95,7 @@
             flex-direction: column;
             align-items: center;
             padding: 10px;
-            margin-top: -10px; /* Adjusted margin for the header */
+            margin-top: -50px; /* Adjusted margin for the header */
             padding-top: 0px; /* Optional: Adjust if necessary to shift upwards */
             
         }
@@ -113,7 +113,7 @@
         .profile-info h1 {
             font-size: 24px;
             margin-bottom: 5px;
-            margin-top: -10px; /* Optional: Ensure the title is closer to the top */
+            margin-top: -50px; /* Optional: Ensure the title is closer to the top */
             text-align: center; /* Center align the title */
 
         }
@@ -220,6 +220,7 @@
             display: none; /* Hidden initially */
             max-width: 800px;
             margin: auto; /* Center the panel */
+            margin-top: -65px;
         }
 
         .fund-transfer h2 {
@@ -509,6 +510,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     margin: auto; /* Center the panel */
+    margin-top: -65px;
 }
 
 .passbook-table h2 {
@@ -654,6 +656,7 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: -30px;
 }
 
 /* FD Form Styling */
@@ -1332,6 +1335,7 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    
 }
 
 /* Table Header */
@@ -1339,7 +1343,9 @@ button:hover {
     background-color: #007BFF; /* Bootstrap primary color */
     color: white;
     padding: 12px;
-    text-align: left;
+    
+    text-align: center;
+border: 1px solid
 }
 
 /* Table Cells */
@@ -3795,7 +3801,8 @@ function fetchRecentTransactions(customerId) {
 // Function to display transactions
 function displayTransactions(transactions) {
     const transactionTable = document.getElementById('transactionTable'); // Ensure this table exists in your HTML
-    transactionTable.innerHTML = ''; // Clear existing rows
+    const tbody = transactionTable.querySelector('tbody'); 
+    tbody.innerHTML = '';
     const transactionHeading = document.querySelector('.transaction-heading'); // Select the heading
 
 
