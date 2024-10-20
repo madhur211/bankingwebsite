@@ -1234,7 +1234,7 @@ app.post('/apply-loan', (req, res) => {
             }
 
             // Respond with success message if loan application is inserted successfully
-            res.json({ success: true, message: 'Loan application submitted successfully!', referenceId });
+            res.json({ success: true, message: 'Loan applied successfully! Your reference ID is ${referenceId}. Please visit the branch for further security purposes.', referenceId });
         });
     });
 });

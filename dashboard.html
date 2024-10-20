@@ -616,6 +616,25 @@
 .account-closure-form button:hover {
     background-color: #0056b3;
 }
+.account-closure-form input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; /* This makes it look like a clickable button */
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    appearance: none; /* Removes default input styles on some browsers */
+    -webkit-appearance: none; /* Ensures cross-browser compatibility */
+    -moz-appearance: none;
+    width: auto; /* Adjust as needed */
+    text-align: center;
+}
+
+.account-closure-form input[type="submit"]:hover {
+    background-color: #0056b3; /* Darkens the button on hover */
+}
 
 .confirmation-dialog {
     display: none; /* Hide by default */
@@ -657,6 +676,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: -30px;
+    
 }
 
 /* FD Form Styling */
@@ -706,6 +726,7 @@
     padding: 10px 20px;
     font-size: 16px;
     transition: background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .fd-form button:hover {
