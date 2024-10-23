@@ -186,10 +186,12 @@ app.post('/register', (req, res) => {
 app.post('/atmDeposit', (req, res) => {
     const { referenceNumber, depositAmount } = req.body;
 
+    // Validate deposit amount
     if (isNaN(depositAmount) || depositAmount <= 0) {
         return res.status(400).json({ success: false, message: 'Invalid deposit amount.' });
     }
 
+    // Step 1: Find customer by reference number
     const findCustomerQuery = 'SELECT * FROM customers WHERE reference_number = ?';
     db.query(findCustomerQuery, [referenceNumber], (err, results) => {
         if (err) {
@@ -202,11 +204,13 @@ app.post('/atmDeposit', (req, res) => {
 
         const customer = results[0];
 
+        // Generate account number, customer ID, login ID, and password
         const accountNumber = Math.floor(Math.random() * 1000000000).toString();
         const customerId = `CUST${Math.floor(Math.random() * 100000)}`;
         const loginId = `LOGIN${Math.floor(Math.random() * 100000)}`;
-        const password = Math.random().toString(36).slice(-8);
+        const password = Math.random().toString(36).slice(-8); // Random password of length 8
 
+        // Step 2: Update customer details
         const updateCustomerQuery = `
             UPDATE customers 
             SET account_number = ?, customer_id = ?, login_id = ?, password = ?, balance = ? 
@@ -217,14 +221,59 @@ app.post('/atmDeposit', (req, res) => {
                 console.error('Error executing query:', err);
                 return res.status(500).json({ success: false, message: 'Error updating customer.' });
             }
-            res.json({
-                success: true,
-                message: 'Deposit successful!',
-                customerId, accountNumber, loginId, password
+
+            // Step 3: Insert into the accounts table
+            const consumerNumber = `CN0${accountNumber}`; // Format for consumer number
+            const insertAccountQuery = `
+                INSERT INTO accounts (customer_id, account_type, account_type_detail, opening_date, balance, account_number, consumer_number)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            // Retrieve account type and details from customer
+            const accountType = customer.account_type; // Assuming these fields exist in your customers table
+            const accountTypeDetail = customer.account_type_detail;
+            const openingDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Current date
+
+            db.query(insertAccountQuery, [customerId, accountType, accountTypeDetail, openingDate, depositAmount, accountNumber, consumerNumber], (err, result) => {
+                if (err) {
+                    console.error('Error inserting into accounts:', err);
+                    return res.status(500).json({ success: false, message: 'Error inserting into accounts.' });
+                }
+
+                console.log('Account inserted successfully.');
+
+                // Step 4: Insert into the transactions table
+                const transactionId = `TRX${Math.floor(Math.random() * 1000000)}`; // Generate transaction ID
+                const currentDate = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+                const insertTransactionQuery = `
+                    INSERT INTO transactions (customer_id, transaction_id, amount, date, particulars, balance_after)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `;
+
+                db.query(insertTransactionQuery, [customerId, transactionId, depositAmount, currentDate, 'ACCOUNT OPENING AMOUNT', depositAmount], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting into transactions:', err);
+                        return res.status(500).json({ success: false, message: 'Error inserting transaction.' });
+                    }
+
+                    console.log('Transaction inserted successfully with ID:', transactionId);
+
+                    // Respond with success
+                    res.json({
+                        success: true,
+                        message: 'Deposit successful!',
+                        customerId,
+                        accountNumber,
+                        loginId,
+                        password
+                    });
+                });
             });
         });
     });
 });
+
 
 // Login route
 app.post('/login', (req, res) => {
